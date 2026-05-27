@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "brewwater-developer" },
+      { name: "description", content: "Access drinking water quality data for German cities via the brewwater API." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "brewwater-developer" },
+      { property: "og:description", content: "Access drinking water quality data for German cities via the brewwater API." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "brewwater-developer" },
+      { name: "twitter:description", content: "Access drinking water quality data for German cities via the brewwater API." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b2b71c9a-e3c2-49c6-9499-9e03f995421d/id-preview-e9d61532--44c832c7-0442-4a3e-ba51-8a3af3f5a238.lovable.app-1779922691806.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b2b71c9a-e3c2-49c6-9499-9e03f995421d/id-preview-e9d61532--44c832c7-0442-4a3e-ba51-8a3af3f5a238.lovable.app-1779922691806.png" },
     ],
     links: [
       {
