@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Droplet, Github, Key, ArrowRight, Check, Copy } from "lucide-react";
+import { Droplet, Github, Key, ArrowRight, Check, Copy, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const NAV = [
   { id: "getting-started", label: "Getting Started" },
@@ -107,12 +108,12 @@ function Tabs({ tabs }: { tabs: { label: string; code: string }[] }) {
   const [active, setActive] = useState(0);
   return (
     <div>
-      <div className="flex gap-1 border-b border-border">
+      <div className="flex gap-1 border-b border-border overflow-x-auto">
         {tabs.map((t, i) => (
           <button
             key={t.label}
             onClick={() => setActive(i)}
-            className={`relative px-3 py-2 text-sm font-medium transition ${
+            className={`relative px-3 py-2 text-sm font-medium transition whitespace-nowrap ${
               active === i ? "text-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -130,20 +131,73 @@ function Tabs({ tabs }: { tabs: { label: string; code: string }[] }) {
 
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-24 border-b border-border py-16 first:pt-8">
+    <section id={id} className="scroll-mt-24 border-b border-border py-12 sm:py-16 first:pt-6 sm:first:pt-8">
       {eyebrow && (
         <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">{eyebrow}</div>
       )}
-      <h2 className="text-3xl font-semibold tracking-tight text-foreground">{title}</h2>
+      <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">{title}</h2>
       <div className="mt-6 space-y-6 text-[15px] leading-relaxed text-muted-foreground">{children}</div>
     </section>
+  );
+}
+
+function MobileNav() {
+  const [open, setOpen] = useState(false);
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <button className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background text-foreground lg:hidden">
+          <Menu className="h-5 w-5" />
+          <span className="sr-only">Open menu</span>
+        </button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-72 bg-sidebar p-0 border-r border-sidebar-border">
+        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <Droplet className="h-4 w-4" />
+          </div>
+          <div>
+            <div className="text-sm font-semibold text-foreground">brewwater</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Developer Hub</div>
+          </div>
+        </div>
+        <nav className="px-4 py-6">
+          <div className="px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            API Reference
+          </div>
+          <ul className="mt-3 space-y-0.5">
+            {NAV.map((n) => (
+              <li key={n.id}>
+                <a
+                  href={`#${n.id}`}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-md px-3 py-1.5 text-sm text-sidebar-foreground transition hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                >
+                  {n.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8 rounded-lg border border-border bg-card p-4">
+            <div className="text-xs font-medium text-foreground">API status</div>
+            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              All systems normal
+            </div>
+          </div>
+        </nav>
+        <div className="border-t border-sidebar-border px-6 py-4 text-xs text-muted-foreground">
+          v1.4.2 · last updated May 2026
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
 export function ApiDocs() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Sidebar */}
+      {/* Desktop Sidebar */}
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
         <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -185,6 +239,17 @@ export function ApiDocs() {
 
       {/* Main */}
       <main className="lg:pl-64">
+        {/* Mobile Header */}
+        <div className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-sm lg:hidden">
+          <MobileNav />
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
+              <Droplet className="h-3.5 w-3.5" />
+            </div>
+            <span className="text-sm font-semibold">brewwater</span>
+          </div>
+        </div>
+
         {/* Hero */}
         <section className="relative overflow-hidden border-b border-border">
           <div
@@ -195,15 +260,15 @@ export function ApiDocs() {
                 "radial-gradient(60% 80% at 80% 0%, oklch(0.92 0.06 235) 0%, transparent 60%), radial-gradient(50% 60% at 0% 30%, oklch(0.95 0.04 220) 0%, transparent 60%)",
             }}
           />
-          <div className="mx-auto max-w-4xl px-6 py-20 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-20 lg:px-12 lg:py-28">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               REST API · JSON · 50+ cities
             </div>
-            <h1 className="mt-6 text-5xl font-semibold tracking-tight text-foreground lg:text-6xl">
+            <h1 className="mt-6 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl xl:text-6xl">
               brewwater <span className="text-primary">Developer API</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
+            <p className="mt-5 max-w-2xl text-base sm:text-lg text-muted-foreground">
               Access drinking water quality data for 50+ German cities — pH, hardness, minerals,
               and brewing-grade chemistry, all from a single endpoint.
             </p>
@@ -215,7 +280,7 @@ export function ApiDocs() {
                 <Github className="h-4 w-4" /> View on GitHub
               </Button>
             </div>
-            <div className="mt-10 inline-flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-2 font-mono text-sm">
+            <div className="mt-8 sm:mt-10 inline-flex flex-wrap items-center gap-2 sm:gap-3 rounded-lg border border-border bg-card px-3 py-2 sm:px-4 font-mono text-xs sm:text-sm">
               <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">GET</span>
               <span className="text-muted-foreground">https://api.brewwater.de/</span>
               <span className="text-foreground">v1/water-profile</span>
@@ -223,7 +288,7 @@ export function ApiDocs() {
           </div>
         </section>
 
-        <div className="mx-auto max-w-4xl px-6 lg:px-12">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-12">
           <Section id="getting-started" eyebrow="01" title="Getting Started">
             <p>
               Make your first request in under a minute. You'll need an API key — create one from
@@ -260,16 +325,16 @@ export function ApiDocs() {
           </Section>
 
           <Section id="endpoints" eyebrow="03" title="Endpoints">
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 font-mono text-sm">
-              <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">GET</span>
-              <span className="text-foreground">/api/v1/water-profile</span>
+            <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 font-mono text-sm overflow-x-auto">
+              <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap">GET</span>
+              <span className="text-foreground whitespace-nowrap">/api/v1/water-profile</span>
             </div>
             <p>Returns the latest measured water chemistry for a given German city or postal code.</p>
 
             <div>
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground">Query parameters</h3>
-              <div className="overflow-hidden rounded-lg border border-border">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full min-w-[520px] text-sm">
                   <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3 font-medium">Name</th>
@@ -311,8 +376,8 @@ export function ApiDocs() {
 
           <Section id="schema" eyebrow="04" title="Response Schema">
             <p>Every successful response returns a flat JSON object with the following fields.</p>
-            <div className="overflow-hidden rounded-lg border border-border">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full min-w-[520px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
                     <th className="px-4 py-3 font-medium">Field</th>
@@ -335,8 +400,8 @@ export function ApiDocs() {
 
           <Section id="errors" eyebrow="05" title="Error Codes">
             <p>brewwater uses conventional HTTP status codes. Errors return a JSON body with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">error</code> and <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">message</code> fields.</p>
-            <div className="overflow-hidden rounded-lg border border-border">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full min-w-[420px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
                     <th className="px-4 py-3 font-medium">Status</th>
@@ -373,10 +438,10 @@ X-RateLimit-Reset: 1716831600`}
             </p>
           </Section>
 
-          <div className="py-16">
-            <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-border bg-card p-8 sm:flex-row sm:items-center">
+          <div className="py-12 sm:py-16">
+            <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-border bg-card p-6 sm:p-8 sm:flex-row sm:items-center">
               <div>
-                <h3 className="text-xl font-semibold text-foreground">Ready to start building?</h3>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground">Ready to start building?</h3>
                 <p className="mt-1 text-sm text-muted-foreground">Free tier — no credit card required.</p>
               </div>
               <Button size="lg" className="gap-2">
@@ -387,7 +452,7 @@ X-RateLimit-Reset: 1716831600`}
         </div>
 
         <footer className="border-t border-border bg-muted/30">
-          <div className="mx-auto flex max-w-4xl flex-col gap-3 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between lg:px-12">
+          <div className="mx-auto flex max-w-4xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-12">
             <div className="flex items-center gap-2">
               <Droplet className="h-4 w-4 text-primary" />
               <span>© {new Date().getFullYear()} brewwater</span>
