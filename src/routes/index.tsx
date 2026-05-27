@@ -1,29 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ApiDocs } from "@/components/api-docs/ApiDocs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "brewwater Developer API — Drinking Water Quality Data" },
+      { name: "description", content: "Access drinking water quality data for 50+ German cities through a simple, reliable REST API." },
+      { property: "og:title", content: "brewwater Developer API" },
+      { property: "og:description", content: "Access drinking water quality data for 50+ German cities." },
     ],
   }),
-  component: Index,
+  component: ApiDocs,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
