@@ -473,11 +473,11 @@ export function ApiDocs() {
             </div>
 
             {/* Dashboard Mockup */}
-            <div className="grid lg:grid-cols-[260px_1fr] divide-y lg:divide-y-0 lg:divide-x divide-border bg-white">
+            <div className="grid lg:grid-cols-[260px_1fr] divide-y lg:divide-y-0 lg:divide-x divide-border bg-white min-h-[540px]">
               {/* Sidebar */}
-              <div className="bg-[#f8f9fa] p-4 overflow-hidden">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 px-2 mb-3">Hamburg · 5 Werke</div>
-                <div className="space-y-1">
+              <div className="bg-[#f8f9fa] p-5 overflow-hidden">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 px-2 mb-4">Hamburg · 5 Werke</div>
+                <div className="space-y-1.5">
                   {[
                     { name: "Baursberg", sub: "Wasserwerk", plz: "5 PLZ", active: false },
                     { name: "Billbrook", sub: "Wasserwerk", plz: "8 PLZ", active: false },
@@ -487,7 +487,7 @@ export function ApiDocs() {
                   ].map((item) => (
                     <div
                       key={item.name}
-                      className={`rounded-xl px-3 py-2.5 ${item.active ? "bg-white shadow-sm border border-border" : "hover:bg-white/60"}`}
+                      className={`rounded-xl px-3 py-3 ${item.active ? "bg-white shadow-sm border border-border" : "hover:bg-white/60"}`}
                     >
                       <div className="flex items-center justify-between">
                         <span className={`text-[13px] font-medium ${item.active ? "text-foreground" : "text-slate-500"}`}>{item.name}</span>
@@ -500,12 +500,12 @@ export function ApiDocs() {
               </div>
 
               {/* Main content */}
-              <div className="bg-white p-6">
+              <div className="bg-white p-8">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-6">
+                <div className="flex items-start justify-between mb-8">
                   <div>
-                    <h3 className="text-lg font-semibold text-foreground">Rothenburgsort</h3>
-                    <p className="text-[12px] text-slate-400 mt-0.5">HAMBURG WASSER · Wasserwerk</p>
+                    <h3 className="text-xl font-semibold text-foreground">Rothenburgsort</h3>
+                    <p className="text-[12px] text-slate-400 mt-1">HAMBURG WASSER · Wasserwerk</p>
                   </div>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-600 border border-emerald-100">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -514,25 +514,26 @@ export function ApiDocs() {
                 </div>
 
                 {/* Stat cards */}
-                <div className="grid grid-cols-3 gap-3 mb-6">
+                <div className="grid grid-cols-4 gap-3 mb-8">
                   {[
-                    { label: "Härte", value: "8.7", unit: "°dH" },
+                    { label: "Gesamthärte", value: "8.7", unit: "°dH" },
                     { label: "pH-Wert", value: "7.6", unit: "" },
+                    { label: "Calcium", value: "50", unit: "mg/L" },
                     { label: "Datenstand", value: "2025", unit: "" },
                   ].map((s) => (
-                    <div key={s.label} className="rounded-xl border border-border bg-[#f8f9fa] p-3">
+                    <div key={s.label} className="rounded-xl border border-border bg-[#f8f9fa] px-4 py-4">
                       <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-2">{s.label}</div>
                       <div className="text-2xl font-semibold text-foreground tracking-tight">
-                        {s.value}<span className="text-base font-normal text-slate-400 ml-1">{s.unit}</span>
+                        {s.value}<span className="text-sm font-normal text-slate-400 ml-1">{s.unit}</span>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Values grid */}
-                <div className="mb-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Wasserwerte</div>
-                  <div className="grid grid-cols-3 gap-x-6 gap-y-3">
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-4">Alle Wasserwerte</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-5">
                     {[
                       { l: "Gesamthärte", v: "8.7 °dH" },
                       { l: "Karbonathärte", v: "5.4 °dH" },
@@ -540,10 +541,16 @@ export function ApiDocs() {
                       { l: "Calcium", v: "50 mg/L" },
                       { l: "Magnesium", v: "6 mg/L" },
                       { l: "Natrium", v: "18 mg/L" },
+                      { l: "Chlorid", v: "32 mg/L" },
+                      { l: "Sulfat", v: "44 mg/L" },
+                      { l: "Nitrat", v: "3.1 mg/L" },
+                      { l: "Hydrogencarbonat", v: "119 mg/L" },
+                      { l: "Restalkalität", v: "2.6 °dH" },
+                      { l: "pH-Wert", v: "7.6" },
                     ].map((item) => (
-                      <div key={item.l}>
-                        <div className="text-[10px] text-slate-400">{item.l}</div>
-                        <div className="text-[13px] font-medium text-foreground mt-0.5">{item.v}</div>
+                      <div key={item.l} className="flex flex-col">
+                        <div className="text-[11px] text-slate-400">{item.l}</div>
+                        <div className="text-[14px] font-medium text-foreground mt-0.5">{item.v}</div>
                       </div>
                     ))}
                   </div>
