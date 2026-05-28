@@ -1,5 +1,17 @@
 import { useState } from "react";
-import { Droplet, Github, Key, ArrowRight, Check, Copy, Menu } from "lucide-react";
+import {
+  Droplet,
+  Github,
+  Key,
+  ArrowRight,
+  Check,
+  Copy,
+  Menu,
+  Zap,
+  ShieldCheck,
+  Globe2,
+  Activity,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -85,19 +97,19 @@ const ERRORS = [
 function CodeBlock({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="group relative overflow-hidden rounded-lg border border-border bg-[var(--code-bg)]">
+    <div className="group relative overflow-hidden rounded-2xl border border-border bg-[var(--code-bg)] shadow-sm">
       <button
         onClick={() => {
           navigator.clipboard.writeText(code);
           setCopied(true);
           setTimeout(() => setCopied(false), 1500);
         }}
-        className="absolute right-3 top-3 inline-flex h-7 items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 text-xs text-[var(--code-fg)] opacity-0 transition group-hover:opacity-100"
+        className="absolute right-3 top-3 inline-flex h-7 items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 text-xs text-[var(--code-fg)] opacity-0 transition group-hover:opacity-100 hover:bg-white/10"
       >
         {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
         {copied ? "Copied" : "Copy"}
       </button>
-      <pre className="overflow-x-auto p-4 text-sm leading-relaxed text-[var(--code-fg)] font-mono">
+      <pre className="overflow-x-auto p-5 text-[13px] leading-relaxed text-[var(--code-fg)] font-mono">
         <code>{code}</code>
       </pre>
     </div>
@@ -108,21 +120,22 @@ function Tabs({ tabs }: { tabs: { label: string; code: string }[] }) {
   const [active, setActive] = useState(0);
   return (
     <div>
-      <div className="flex gap-1 border-b border-border overflow-x-auto">
+      <div className="flex gap-1 overflow-x-auto">
         {tabs.map((t, i) => (
           <button
             key={t.label}
             onClick={() => setActive(i)}
-            className={`relative px-3 py-2 text-sm font-medium transition whitespace-nowrap ${
-              active === i ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+            className={`relative rounded-full px-4 py-1.5 text-sm font-medium transition whitespace-nowrap ${
+              active === i
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {t.label}
-            {active === i && <span className="absolute inset-x-0 -bottom-px h-0.5 bg-primary" />}
           </button>
         ))}
       </div>
-      <div className="mt-3">
+      <div className="mt-4">
         <CodeBlock code={tabs[active].code} />
       </div>
     </div>
@@ -131,12 +144,22 @@ function Tabs({ tabs }: { tabs: { label: string; code: string }[] }) {
 
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-24 border-b border-border py-12 sm:py-16 first:pt-6 sm:first:pt-8">
-      {eyebrow && (
-        <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">{eyebrow}</div>
-      )}
-      <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">{title}</h2>
-      <div className="mt-6 space-y-6 text-[15px] leading-relaxed text-muted-foreground">{children}</div>
+    <section id={id} className="scroll-mt-32 py-20 sm:py-28">
+      <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
+        <div>
+          {eyebrow && (
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              {eyebrow}
+            </div>
+          )}
+          <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
+            {title}
+          </h2>
+        </div>
+        <div className="space-y-7 text-[16px] leading-relaxed text-muted-foreground max-w-2xl">
+          {children}
+        </div>
+      </div>
     </section>
   );
 }
@@ -146,167 +169,220 @@ function MobileNav() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background text-foreground lg:hidden">
+        <button className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground lg:hidden">
           <Menu className="h-5 w-5" />
           <span className="sr-only">Open menu</span>
         </button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-72 bg-sidebar p-0 border-r border-sidebar-border">
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+      <SheetContent side="left" className="w-80 bg-background p-0 border-r border-border">
+        <div className="flex h-20 items-center gap-2 border-b border-border px-6">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <Droplet className="h-4 w-4" />
           </div>
-          <div>
-            <div className="text-sm font-semibold text-foreground">brewwater</div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Developer Hub</div>
-          </div>
+          <span className="text-base font-semibold tracking-tight">brewwater</span>
         </div>
-        <nav className="px-4 py-6">
-          <div className="px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <nav className="px-6 py-8">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             API Reference
           </div>
-          <ul className="mt-3 space-y-0.5">
+          <ul className="mt-4 space-y-1">
             {NAV.map((n) => (
               <li key={n.id}>
                 <a
                   href={`#${n.id}`}
                   onClick={() => setOpen(false)}
-                  className="block rounded-md px-3 py-1.5 text-sm text-sidebar-foreground transition hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  className="block rounded-lg px-3 py-2 text-[15px] text-foreground/80 transition hover:bg-accent hover:text-accent-foreground"
                 >
                   {n.label}
                 </a>
               </li>
             ))}
           </ul>
-          <div className="mt-8 rounded-lg border border-border bg-card p-4">
-            <div className="text-xs font-medium text-foreground">API status</div>
-            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              All systems normal
-            </div>
-          </div>
         </nav>
-        <div className="border-t border-sidebar-border px-6 py-4 text-xs text-muted-foreground">
-          v1.4.2 · last updated May 2026
-        </div>
       </SheetContent>
     </Sheet>
+  );
+}
+
+function HeroIllustration() {
+  return (
+    <div className="relative mx-auto mt-16 w-full max-w-6xl px-4 sm:mt-24 sm:px-6">
+      <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]" style={{
+        background:
+          "radial-gradient(120% 80% at 50% 0%, oklch(0.62 0.28 264) 0%, oklch(0.45 0.3 264) 55%, oklch(0.32 0.28 264) 100%)",
+      }}>
+        <div className="relative grid gap-6 px-6 py-14 sm:px-12 sm:py-20 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-10 lg:px-16 lg:py-24">
+          {/* Left cards */}
+          <div className="hidden flex-col gap-6 lg:flex">
+            {[
+              { label: "GET /water-profile", icon: Globe2 },
+              { label: "ph: 7.6 · °dH 18.4", icon: Activity },
+            ].map((c) => (
+              <div key={c.label} className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl shadow-black/10 backdrop-blur">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <c.icon className="h-4 w-4" />
+                </div>
+                <div className="font-mono text-xs text-foreground/80">{c.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Center device */}
+          <div className="mx-auto w-full max-w-sm">
+            <div className="rounded-3xl bg-white/95 p-5 shadow-2xl shadow-black/20 backdrop-blur">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="text-[11px] font-medium text-muted-foreground">Live</span>
+                </div>
+                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">200 OK</span>
+              </div>
+              <div className="mt-4 rounded-xl bg-foreground/[0.04] p-3 font-mono text-[11px] leading-relaxed text-foreground/80">
+{`{
+  "city": "Berlin",
+  "ph": 7.6,
+  "total_hardness_dh": 18.4,
+  "hardness_class": "hard"
+}`}
+              </div>
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {["pH", "°dH", "Ca"].map((m) => (
+                  <div key={m} className="rounded-lg bg-foreground/[0.04] py-2 text-center">
+                    <div className="text-[10px] text-muted-foreground">{m}</div>
+                    <div className="font-mono text-xs font-semibold text-foreground">
+                      {m === "pH" ? "7.6" : m === "°dH" ? "18.4" : "105"}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right cards */}
+          <div className="hidden flex-col gap-6 lg:flex lg:items-end">
+            {[
+              { label: "supplier: Berliner Wasser", icon: ShieldCheck },
+              { label: "12ms response · EU", icon: Zap },
+            ].map((c) => (
+              <div key={c.label} className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl shadow-black/10 backdrop-blur">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <c.icon className="h-4 w-4" />
+                </div>
+                <div className="font-mono text-xs text-foreground/80">{c.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export function ApiDocs() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Desktop Sidebar */}
-      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Droplet className="h-4 w-4" />
+      {/* Top Nav */}
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+              <Droplet className="h-4 w-4" />
+            </div>
+            <span className="text-base font-semibold tracking-tight">brewwater</span>
+            <span className="ml-2 hidden rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-accent-foreground sm:inline-block">
+              API
+            </span>
           </div>
-          <div>
-            <div className="text-sm font-semibold text-foreground">brewwater</div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Developer Hub</div>
-          </div>
-        </div>
-        <nav className="flex-1 overflow-y-auto px-4 py-6">
-          <div className="px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-            API Reference
-          </div>
-          <ul className="mt-3 space-y-0.5">
-            {NAV.map((n) => (
-              <li key={n.id}>
-                <a
-                  href={`#${n.id}`}
-                  className="block rounded-md px-3 py-1.5 text-sm text-sidebar-foreground transition hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                >
-                  {n.label}
-                </a>
-              </li>
+          <nav className="hidden items-center gap-8 lg:flex">
+            {NAV.slice(0, 4).map((n) => (
+              <a
+                key={n.id}
+                href={`#${n.id}`}
+                className="text-sm font-medium text-foreground/70 transition hover:text-foreground"
+              >
+                {n.label}
+              </a>
             ))}
-          </ul>
-          <div className="mt-8 rounded-lg border border-border bg-card p-4">
-            <div className="text-xs font-medium text-foreground">API status</div>
-            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              All systems normal
-            </div>
-          </div>
-        </nav>
-        <div className="border-t border-sidebar-border px-6 py-4 text-xs text-muted-foreground">
-          v1.4.2 · last updated May 2026
-        </div>
-      </aside>
-
-      {/* Main */}
-      <main className="lg:pl-64">
-        {/* Mobile Header */}
-        <div className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-sm lg:hidden">
-          <MobileNav />
+          </nav>
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Droplet className="h-3.5 w-3.5" />
-            </div>
-            <span className="text-sm font-semibold">brewwater</span>
+            <Button variant="ghost" size="sm" className="hidden gap-1.5 sm:inline-flex">
+              <Github className="h-4 w-4" /> GitHub
+            </Button>
+            <Button size="sm" className="rounded-full px-4">
+              Get API Key
+            </Button>
+            <MobileNav />
           </div>
         </div>
+      </header>
 
+      <main>
         {/* Hero */}
-        <section className="relative overflow-hidden border-b border-border">
-          <div
-            aria-hidden
-            className="absolute inset-0 -z-10 opacity-[0.6]"
-            style={{
-              background:
-                "radial-gradient(60% 80% at 80% 0%, oklch(0.92 0.06 235) 0%, transparent 60%), radial-gradient(50% 60% at 0% 30%, oklch(0.95 0.04 220) 0%, transparent 60%)",
-            }}
-          />
-          <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-20 lg:px-12 lg:py-28">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
+        <section className="relative overflow-hidden">
+          <div className="mx-auto max-w-6xl px-4 pb-4 pt-20 text-center sm:px-6 sm:pt-32 lg:pt-40">
+            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              REST API · JSON · 50+ cities
+              REST API · JSON · 50+ deutsche Städte
             </div>
-            <h1 className="mt-6 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl xl:text-6xl">
-              brewwater <span className="text-primary">Developer API</span>
+            <h1 className="mx-auto mt-8 max-w-4xl text-5xl font-semibold tracking-[-0.04em] text-foreground sm:text-6xl lg:text-7xl xl:text-[88px] xl:leading-[0.95]">
+              Wasserdaten,{" "}
+              <span className="text-primary">direkt in Ihre Systeme.</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-base sm:text-lg text-muted-foreground">
-              Access drinking water quality data for 50+ German cities — pH, hardness, minerals,
-              and brewing-grade chemistry, all from a single endpoint.
+            <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+              Eine einzige Schnittstelle für pH, Härte, Mineralien und brauereitaugliche
+              Wasserchemie — verlässlich, dokumentiert, sofort einsatzbereit.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button size="lg" className="gap-2">
-                <Key className="h-4 w-4" /> Get API Key
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <Button size="lg" className="h-12 gap-2 rounded-full px-6 text-base">
+                <Key className="h-4 w-4" /> API Key anfordern
               </Button>
-              <Button size="lg" variant="outline" className="gap-2">
-                <Github className="h-4 w-4" /> View on GitHub
+              <Button size="lg" variant="outline" className="h-12 gap-2 rounded-full border-foreground/15 px-6 text-base">
+                Dokumentation lesen <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
-            <div className="mt-8 sm:mt-10 inline-flex flex-wrap items-center gap-2 sm:gap-3 rounded-lg border border-border bg-card px-3 py-2 sm:px-4 font-mono text-xs sm:text-sm">
-              <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">GET</span>
-              <span className="text-muted-foreground">https://api.brewwater.de/</span>
-              <span className="text-foreground">v1/water-profile</span>
-            </div>
+          </div>
+
+          <HeroIllustration />
+        </section>
+
+        {/* Stats strip */}
+        <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32">
+          <div className="grid grid-cols-2 gap-y-10 border-y border-border py-12 sm:grid-cols-4">
+            {[
+              { k: "50+", v: "Städte abgedeckt" },
+              { k: "99.98%", v: "Uptime SLA" },
+              { k: "<20ms", v: "Median Latenz" },
+              { k: "v1.4.2", v: "Stabile API" },
+            ].map((s) => (
+              <div key={s.k} className="px-4 text-center sm:border-r sm:border-border sm:last:border-r-0">
+                <div className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+                  {s.k}
+                </div>
+                <div className="mt-2 text-sm text-muted-foreground">{s.v}</div>
+              </div>
+            ))}
           </div>
         </section>
 
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           <Section id="getting-started" eyebrow="01" title="Getting Started">
             <p>
-              Make your first request in under a minute. You'll need an API key — create one from
-              your dashboard after signing up.
+              In unter einer Minute zur ersten erfolgreichen Anfrage. Erstellen Sie einen API-Key
+              in Ihrem Dashboard und senden Sie eine GET-Anfrage mit einer PLZ oder Stadt.
             </p>
-            <ol className="space-y-5">
+            <ol className="space-y-6">
               {[
-                { t: "Create an API key", d: "Sign in to brewwater.de and generate a key from Settings → API." },
-                { t: "Authenticate your request", d: "Pass the key as a Bearer token in the Authorization header." },
-                { t: "Query a city", d: "Send a GET request with a plz or city parameter." },
+                { t: "API-Key erstellen", d: "Melden Sie sich bei brewwater.de an und erzeugen Sie einen Key unter Settings → API." },
+                { t: "Anfrage authentifizieren", d: "Übergeben Sie den Key als Bearer-Token im Authorization-Header." },
+                { t: "Stadt abfragen", d: "Senden Sie eine GET-Anfrage mit einem plz- oder city-Parameter." },
               ].map((s, i) => (
-                <li key={s.t} className="flex gap-4">
-                  <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-sm font-semibold text-primary">
+                <li key={s.t} className="flex gap-5">
+                  <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                     {i + 1}
                   </div>
                   <div>
-                    <div className="font-medium text-foreground">{s.t}</div>
-                    <div className="text-sm text-muted-foreground">{s.d}</div>
+                    <div className="text-lg font-semibold text-foreground">{s.t}</div>
+                    <div className="mt-1 text-[15px] text-muted-foreground">{s.d}</div>
                   </div>
                 </li>
               ))}
@@ -316,24 +392,28 @@ export function ApiDocs() {
 
           <Section id="authentication" eyebrow="02" title="Authentication">
             <p>
-              All requests must include an <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">Authorization</code> header
-              with a Bearer token. Keys come in two flavours: <strong className="text-foreground">test</strong> (prefixed
-              <code className="ml-1 rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_test_sk_</code>)
-              and <strong className="text-foreground">live</strong> (<code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_sk_</code>).
+              Jede Anfrage benötigt einen{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">Authorization</code>{" "}
+              Header mit einem Bearer-Token. Es gibt zwei Key-Typen:{" "}
+              <strong className="text-foreground">test</strong> (
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_test_sk_</code>
+              ) und <strong className="text-foreground">live</strong> (
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_sk_</code>
+              ).
             </p>
             <CodeBlock code={`Authorization: Bearer bw_live_sk_4f8a...c91d`} />
           </Section>
 
           <Section id="endpoints" eyebrow="03" title="Endpoints">
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 font-mono text-sm overflow-x-auto">
+            <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-5 py-4 font-mono text-sm overflow-x-auto">
               <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap">GET</span>
               <span className="text-foreground whitespace-nowrap">/api/v1/water-profile</span>
             </div>
-            <p>Returns the latest measured water chemistry for a given German city or postal code.</p>
+            <p>Liefert die zuletzt gemessene Wasserchemie für eine deutsche Stadt oder PLZ.</p>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground">Query parameters</h3>
-              <div className="overflow-x-auto rounded-lg border border-border">
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Query parameters</h3>
+              <div className="overflow-x-auto rounded-2xl border border-border">
                 <table className="w-full min-w-[520px] text-sm">
                   <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <tr>
@@ -358,7 +438,7 @@ export function ApiDocs() {
             </div>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground">Example request</h3>
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Example request</h3>
               <Tabs
                 tabs={[
                   { label: "cURL", code: CURL },
@@ -369,14 +449,14 @@ export function ApiDocs() {
             </div>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground">Example response</h3>
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Example response</h3>
               <CodeBlock code={RESPONSE} />
             </div>
           </Section>
 
           <Section id="schema" eyebrow="04" title="Response Schema">
-            <p>Every successful response returns a flat JSON object with the following fields.</p>
-            <div className="overflow-x-auto rounded-lg border border-border">
+            <p>Jede erfolgreiche Antwort liefert ein flaches JSON-Objekt mit den folgenden Feldern.</p>
+            <div className="overflow-x-auto rounded-2xl border border-border">
               <table className="w-full min-w-[520px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
@@ -399,8 +479,12 @@ export function ApiDocs() {
           </Section>
 
           <Section id="errors" eyebrow="05" title="Error Codes">
-            <p>brewwater uses conventional HTTP status codes. Errors return a JSON body with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">error</code> and <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">message</code> fields.</p>
-            <div className="overflow-x-auto rounded-lg border border-border">
+            <p>
+              brewwater nutzt konventionelle HTTP-Status-Codes. Fehler liefern ein JSON-Objekt mit{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">error</code> und{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">message</code>.
+            </p>
+            <div className="overflow-x-auto rounded-2xl border border-border">
               <table className="w-full min-w-[420px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
@@ -424,8 +508,9 @@ export function ApiDocs() {
 
           <Section id="rate-limits" eyebrow="06" title="Rate Limits">
             <p>
-              The free tier allows 60 requests/minute and 10,000 requests/month. Paid plans scale up to
-              10,000 requests/minute. Every response includes the current limits in headers:
+              Der kostenlose Tarif erlaubt 60 Anfragen/Minute und 10.000 Anfragen/Monat. Bezahlte
+              Tarife skalieren bis 10.000 Anfragen/Minute. Jede Antwort enthält die aktuellen
+              Limits in den Headern:
             </p>
             <CodeBlock
               code={`X-RateLimit-Limit: 60
@@ -433,31 +518,47 @@ X-RateLimit-Remaining: 58
 X-RateLimit-Reset: 1716831600`}
             />
             <p>
-              When you exceed the limit you'll receive a <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">429 rate_limited</code> response.
-              Retry after the timestamp in <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-RateLimit-Reset</code>.
+              Beim Überschreiten erhalten Sie{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">429 rate_limited</code>.
+              Wiederholen Sie nach dem Zeitstempel in{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-RateLimit-Reset</code>.
             </p>
           </Section>
 
-          <div className="py-12 sm:py-16">
-            <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-border bg-card p-6 sm:p-8 sm:flex-row sm:items-center">
-              <div>
-                <h3 className="text-lg sm:text-xl font-semibold text-foreground">Ready to start building?</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Free tier — no credit card required.</p>
+          {/* CTA */}
+          <div className="py-20 sm:py-28">
+            <div
+              className="relative overflow-hidden rounded-[2rem] px-8 py-16 text-center sm:px-16 sm:py-24"
+              style={{
+                background:
+                  "radial-gradient(120% 80% at 50% 0%, oklch(0.62 0.28 264) 0%, oklch(0.4 0.3 264) 100%)",
+              }}
+            >
+              <h3 className="mx-auto max-w-2xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                Bereit, Wasserdaten zu integrieren?
+              </h3>
+              <p className="mx-auto mt-5 max-w-xl text-white/80 sm:text-lg">
+                Kostenloser Tarif — keine Kreditkarte erforderlich. In wenigen Minuten live.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+                <Button size="lg" variant="secondary" className="h-12 gap-2 rounded-full bg-white px-6 text-base text-foreground hover:bg-white/90">
+                  API Key anfordern <ArrowRight className="h-4 w-4" />
+                </Button>
+                <Button size="lg" variant="outline" className="h-12 gap-2 rounded-full border-white/30 bg-transparent px-6 text-base text-white hover:bg-white/10 hover:text-white">
+                  Vertrieb kontaktieren
+                </Button>
               </div>
-              <Button size="lg" className="gap-2">
-                Get API Key <ArrowRight className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </div>
 
-        <footer className="border-t border-border bg-muted/30">
-          <div className="mx-auto flex max-w-4xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-12">
+        <footer className="border-t border-border">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
             <div className="flex items-center gap-2">
               <Droplet className="h-4 w-4 text-primary" />
               <span>© {new Date().getFullYear()} brewwater</span>
             </div>
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-6">
               <a href="https://brewwater.de" className="hover:text-foreground">brewwater.de</a>
               <a href="#" className="hover:text-foreground">Status</a>
               <a href="#" className="hover:text-foreground">Changelog</a>
