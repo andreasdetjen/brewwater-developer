@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Droplet,
   Github,
@@ -281,6 +281,20 @@ function HeroIllustration() {
 
 export function ApiDocs() {
   const [loginOpen, setLoginOpen] = useState(false);
+  const loginRef = useRef<HTMLDivElement>(null);
+  const loginBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!loginOpen) return;
+    function onDown(e: MouseEvent) {
+      const t = e.target as Node;
+      if (loginRef.current?.contains(t) || loginBtnRef.current?.contains(t)) return;
+      setLoginOpen(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [loginOpen]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Top Nav */}
@@ -311,6 +325,7 @@ export function ApiDocs() {
               <Github className="h-4 w-4" /> GitHub
             </Button>
             <Button
+              ref={loginBtnRef}
               size="sm"
               className="rounded-full px-4"
               onClick={() => setLoginOpen((v) => !v)}
@@ -321,8 +336,11 @@ export function ApiDocs() {
           </div>
         </div>
         {loginOpen && (
-          <div className="absolute right-4 top-[calc(100%+12px)] z-50 w-[min(92vw,420px)] sm:right-8 lg:right-10 animate-in fade-in slide-in-from-top-2 duration-200">
-            <LoginModal onClose={() => setLoginOpen(false)} />
+          <div
+            ref={loginRef}
+            className="absolute right-4 top-[calc(100%+8px)] z-50 sm:right-8 lg:right-10 animate-in fade-in slide-in-from-top-2 duration-200"
+          >
+            <LoginModal />
           </div>
         )}
       </header>
