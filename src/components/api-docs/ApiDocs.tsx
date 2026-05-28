@@ -463,7 +463,7 @@ export function ApiDocs() {
               </div>
               <div className="flex-1 mx-4">
                 <div className="rounded-md bg-background border border-border px-3 py-1 text-xs text-muted-foreground font-mono">
-                  api.brewwater.de/v1/water-profile?city=München
+                  api.brewwater.de/v1/water-profile?city=Hamburg
                 </div>
               </div>
               <div className="flex items-center gap-1">
