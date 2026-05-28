@@ -656,17 +656,77 @@ X-RateLimit-Reset: 1716831600`}
           </div>
         </div>
 
-        <footer className="border-t border-border">
-          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
-            <div className="flex items-center gap-2">
-              <Droplet className="h-4 w-4 text-primary" />
-              <span>© {new Date().getFullYear()} brewwater</span>
+        <footer
+          style={{
+            background: "linear-gradient(135deg, oklch(0.45 0.28 264) 0%, oklch(0.32 0.3 264) 100%)",
+          }}
+          className="mt-0 overflow-hidden"
+        >
+          {/* Main footer links */}
+          <div className="mx-auto max-w-6xl px-6 pt-16 pb-10 lg:px-10">
+            <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
+              {/* Logo */}
+              <div className="col-span-2 sm:col-span-1">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 text-white">
+                    <Droplet className="h-4 w-4" />
+                  </div>
+                  <span className="text-base font-semibold text-white tracking-tight">brewwater</span>
+                </div>
+                <p className="text-sm text-white/60 leading-relaxed">
+                  Wasserdaten für Entwickler und Brauer.
+                </p>
+              </div>
+
+              {/* API */}
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-4">API</div>
+                <ul className="space-y-3 text-sm text-white/75">
+                  {["Getting Started", "Authentication", "Endpoints", "Rate Limits"].map((l) => (
+                    <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Ressourcen */}
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-4">Ressourcen</div>
+                <ul className="space-y-3 text-sm text-white/75">
+                  {["Changelog", "Status", "GitHub", "brewwater.de"].map((l) => (
+                    <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Support */}
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-4">Support</div>
+                <ul className="space-y-3 text-sm text-white/75">
+                  {["Kontakt", "Impressum", "Datenschutz"].map((l) => (
+                    <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <div className="flex items-center gap-6">
-              <a href="https://brewwater.de" className="hover:text-foreground">brewwater.de</a>
-              <a href="#" className="hover:text-foreground">Status</a>
-              <a href="#" className="hover:text-foreground">Changelog</a>
+
+            {/* Divider + copyright */}
+            <div className="mt-12 border-t border-white/15 pt-6 flex flex-col gap-2 sm:flex-row sm:justify-between text-xs text-white/40">
+              <span>Copyright © {new Date().getFullYear()} brewwater. All Rights Reserved.</span>
+              <div className="flex gap-5">
+                <a href="#" className="hover:text-white/70 transition-colors">Datenschutzerklärung</a>
+                <a href="#" className="hover:text-white/70 transition-colors">Impressum</a>
+              </div>
             </div>
+          </div>
+
+          {/* Large wordmark */}
+          <div className="select-none overflow-hidden px-4 pb-0 text-center">
+            <span
+              className="inline-block text-[clamp(4rem,18vw,14rem)] font-extrabold leading-none tracking-tight"
+              style={{ color: "rgba(255,255,255,0.08)" }}
+            >
+              brewwater
+            </span>
           </div>
         </footer>
       </main>
