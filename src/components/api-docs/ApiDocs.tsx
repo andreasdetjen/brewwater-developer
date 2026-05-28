@@ -347,6 +347,17 @@ export function ApiDocs() {
   const loginRef = useRef<HTMLDivElement>(null);
   const loginBtnRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    if (!loginOpen) return;
+    function onDown(e: MouseEvent) {
+      const t = e.target as Node;
+      if (loginRef.current?.contains(t) || loginBtnRef.current?.contains(t)) return;
+      setLoginOpen(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [loginOpen]);
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -377,22 +388,19 @@ export function ApiDocs() {
             <Button variant="ghost" size="sm" className="hidden gap-1.5 sm:inline-flex">
               <Github className="h-4 w-4" /> GitHub
             </Button>
-            <div
-              className="relative"
-              onMouseEnter={() => setLoginOpen(true)}
-              onMouseLeave={() => setLoginOpen(false)}
-            >
+            <div className="relative">
               <Button
                 ref={loginBtnRef}
                 size="sm"
                 className="rounded-full px-4"
+                onClick={() => setLoginOpen((v) => !v)}
               >
                 Log in
               </Button>
               {loginOpen && (
                 <div
                   ref={loginRef}
-                  className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+8px)] z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                  className="absolute right-0 top-[calc(100%+8px)] z-50 animate-in fade-in slide-in-from-top-2 duration-200"
                 >
                   <LoginModal />
                 </div>
