@@ -723,7 +723,7 @@ X-RateLimit-Reset: 1716831600`}
           <div className="select-none overflow-hidden px-4 pb-0 text-center">
             <span
               className="inline-block text-[clamp(4rem,18vw,14rem)] font-extrabold leading-none tracking-tight"
-              style={{ color: "rgba(255,255,255,0.08)" }}
+              style={{ color: "rgba(255,255,255,0.15)" }}
             >
               brewwater
             </span>
