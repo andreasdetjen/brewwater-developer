@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { ApiDocs } from "@/components/api-docs/ApiDocs";
+import { LoginModal } from "@/components/login/LoginModal";
 import "./styles.css";
 
 function App() {
@@ -10,6 +11,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ApiDocs />} />
+        <Route
+          path="/login"
+          element={
+            <div className="min-h-screen flex items-center justify-center p-6 bg-muted/40">
+              <LoginModal />
+            </div>
+          }
+        />
         <Route path="*" element={<ApiDocs />} />
       </Routes>
     </BrowserRouter>
