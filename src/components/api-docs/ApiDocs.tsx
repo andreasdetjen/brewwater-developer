@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { LoginModal } from "@/components/login/LoginModal";
 
 const NAV = [
   { id: "getting-started", label: "Getting Started" },
@@ -279,6 +280,7 @@ function HeroIllustration() {
 }
 
 export function ApiDocs() {
+  const [loginOpen, setLoginOpen] = useState(false);
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Top Nav */}
@@ -308,12 +310,21 @@ export function ApiDocs() {
             <Button variant="ghost" size="sm" className="hidden gap-1.5 sm:inline-flex">
               <Github className="h-4 w-4" /> GitHub
             </Button>
-            <Button size="sm" className="rounded-full px-4">
-              Get API Key
+            <Button
+              size="sm"
+              className="rounded-full px-4"
+              onClick={() => setLoginOpen((v) => !v)}
+            >
+              Log in
             </Button>
             <MobileNav />
           </div>
         </div>
+        {loginOpen && (
+          <div className="absolute right-4 top-[calc(100%+12px)] z-50 w-[min(92vw,420px)] sm:right-8 lg:right-10 animate-in fade-in slide-in-from-top-2 duration-200">
+            <LoginModal onClose={() => setLoginOpen(false)} />
+          </div>
+        )}
       </header>
 
       <main>
