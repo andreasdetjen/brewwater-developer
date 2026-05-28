@@ -305,10 +305,10 @@ const FAQS = [
 function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-2xl bg-[#f4f4f5] px-7 py-6">
+    <div className="rounded-2xl bg-[#f4f4f5] px-7 py-0 min-h-[88px] flex flex-col justify-center">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-start gap-6 text-left"
+        className="flex w-full items-start gap-6 text-left py-6"
       >
         <span className="shrink-0 w-8 pt-0.5 text-sm font-medium tabular-nums text-foreground/30 select-none">{num}</span>
         <span className="flex-1 text-[17px] font-semibold text-foreground leading-snug">{q}</span>
