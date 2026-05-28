@@ -28,29 +28,27 @@ export function LoginModal() {
         </div>
 
         {/* Hover-expand login form */}
-        <div className="grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-in-out group-hover:grid-rows-[1fr] group-hover:opacity-100 group-focus-within:grid-rows-[1fr] group-focus-within:opacity-100">
-          <div className="overflow-hidden">
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="pt-3 space-y-2"
-            >
-              <Input
-                type="email"
-                placeholder="E-Mail"
-                autoComplete="email"
-                className="h-10 rounded-lg bg-background"
-              />
-              <Input
-                type="password"
-                placeholder="Passwort"
-                autoComplete="current-password"
-                className="h-10 rounded-lg bg-background"
-              />
-              <Button type="submit" className="w-full h-10 rounded-lg">
-                Anmelden
-              </Button>
-            </form>
-          </div>
+        <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 ease-in-out group-hover:max-h-[200px] group-hover:opacity-100 group-focus-within:max-h-[200px] group-focus-within:opacity-100">
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="pt-3 space-y-2"
+          >
+            <Input
+              type="email"
+              placeholder="E-Mail"
+              autoComplete="email"
+              className="h-10 rounded-lg bg-background"
+            />
+            <Input
+              type="password"
+              placeholder="Passwort"
+              autoComplete="current-password"
+              className="h-10 rounded-lg bg-background"
+            />
+            <Button type="submit" className="w-full h-10 rounded-lg">
+              Anmelden
+            </Button>
+          </form>
         </div>
       </div>
     </div>
