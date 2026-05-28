@@ -472,39 +472,82 @@ export function ApiDocs() {
               </div>
             </div>
 
-            {/* Split view */}
-            <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border">
-              {/* Left: Request */}
-              <div className="bg-[#0f172a] p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Request</span>
-                  <span className="rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-semibold text-primary">GET</span>
+            {/* Dashboard Mockup */}
+            <div className="grid lg:grid-cols-[260px_1fr] divide-y lg:divide-y-0 lg:divide-x divide-border bg-white">
+              {/* Sidebar */}
+              <div className="bg-[#f8f9fa] p-4 overflow-hidden">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 px-2 mb-3">Hamburg · 8 Profile</div>
+                <div className="space-y-1">
+                  {[
+                    { name: "Baursberg", sub: "Wasserwerk", plz: "5 PLZ", active: false },
+                    { name: "Hamburg gesamt", sub: "Ø Stadt", plz: "", active: true },
+                    { name: "Langenhorn", sub: "Wasserwerk", plz: "1 PLZ", active: false },
+                    { name: "Rothenburgsort", sub: "Wasserwerk", plz: "20 PLZ", active: false },
+                    { name: "Stellingen", sub: "Wasserwerk", plz: "6 PLZ", active: false },
+                  ].map((item) => (
+                    <div
+                      key={item.name}
+                      className={`rounded-xl px-3 py-2.5 ${item.active ? "bg-white shadow-sm border border-border" : "hover:bg-white/60"}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className={`text-[13px] font-medium ${item.active ? "text-foreground" : "text-slate-500"}`}>{item.name}</span>
+                        {item.plz && <span className="text-[11px] text-slate-400">{item.plz}</span>}
+                      </div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">{item.sub}</div>
+                    </div>
+                  ))}
                 </div>
-                <pre className="font-mono text-[13px] leading-relaxed overflow-x-auto">
-<code><span className="text-slate-400">curl </span><span className="text-emerald-400">https://api.brewwater.de/v1/water-profile</span>{"\n"}
-<span className="text-slate-400">  -H </span><span className="text-amber-300">"Authorization: Bearer bw_live_sk_..."</span>{"\n"}
-<span className="text-slate-400">  -G </span><span className="text-slate-400">--data-urlencode </span><span className="text-amber-300">"city=München"</span>
-</code></pre>
               </div>
 
-              {/* Right: Response */}
-              <div className="bg-[#0f172a] p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Response</span>
-                  <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">200 OK</span>
+              {/* Main content */}
+              <div className="bg-white p-6">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">Hamburg gesamt</h3>
+                    <p className="text-[12px] text-slate-400 mt-0.5">HAMBURG WASSER · Stadtdurchschnitt</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-600 border border-emerald-100">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Aktuell
+                  </span>
                 </div>
-                <pre className="font-mono text-[13px] leading-relaxed overflow-x-auto">
-<code><span className="text-slate-400">{"{"}</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"city"</span><span className="text-slate-400">: </span><span className="text-amber-300">"München"</span><span className="text-slate-400">,</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"supplier"</span><span className="text-slate-400">: </span><span className="text-amber-300">"Stadtwerke München"</span><span className="text-slate-400">,</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"ph"</span><span className="text-slate-400">: </span><span className="text-emerald-400">7.4</span><span className="text-slate-400">,</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"total_hardness_dh"</span><span className="text-slate-400">: </span><span className="text-emerald-400">14.9</span><span className="text-slate-400">,</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"hardness_class"</span><span className="text-slate-400">: </span><span className="text-amber-300">"hard"</span><span className="text-slate-400">,</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"calcium_mgl"</span><span className="text-slate-400">: </span><span className="text-emerald-400">92</span><span className="text-slate-400">,</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"magnesium_mgl"</span><span className="text-slate-400">: </span><span className="text-emerald-400">18.3</span><span className="text-slate-400">,</span>{"\n"}
-<span className="text-slate-400">  </span><span className="text-sky-300">"residual_alkalinity_dh"</span><span className="text-slate-400">: </span><span className="text-emerald-400">3.1</span>{"\n"}
-<span className="text-slate-400">{"}"}</span>
-</code></pre>
+
+                {/* Stat cards */}
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  {[
+                    { label: "Härte", value: "8.7", unit: "°dH" },
+                    { label: "pH-Wert", value: "7.6", unit: "" },
+                    { label: "Datenstand", value: "2025", unit: "" },
+                  ].map((s) => (
+                    <div key={s.label} className="rounded-xl border border-border bg-[#f8f9fa] p-3">
+                      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-2">{s.label}</div>
+                      <div className="text-2xl font-semibold text-foreground tracking-tight">
+                        {s.value}<span className="text-base font-normal text-slate-400 ml-1">{s.unit}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Values grid */}
+                <div className="mb-4">
+                  <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Wasserwerte</div>
+                  <div className="grid grid-cols-3 gap-x-6 gap-y-3">
+                    {[
+                      { l: "Gesamthärte", v: "8.7 °dH" },
+                      { l: "Karbonathärte", v: "5.4 °dH" },
+                      { l: "Säurekapazität", v: "1.93 mmol/L" },
+                      { l: "Calcium", v: "50 mg/L" },
+                      { l: "Magnesium", v: "6 mg/L" },
+                      { l: "Natrium", v: "18 mg/L" },
+                    ].map((item) => (
+                      <div key={item.l}>
+                        <div className="text-[10px] text-slate-400">{item.l}</div>
+                        <div className="text-[13px] font-medium text-foreground mt-0.5">{item.v}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
