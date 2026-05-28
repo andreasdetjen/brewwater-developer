@@ -1,28 +1,28 @@
-import { Hexagon } from "lucide-react";
+import { Droplets } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export function LoginModal() {
   return (
-    <div className="w-[380px] rounded-2xl bg-background p-6 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.25)] ring-1 ring-border/60">
-      <h2 className="text-center text-xl font-normal text-muted-foreground mb-5">
+    <div className="w-[260px] rounded-2xl bg-background p-4 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.25)] ring-1 ring-border/60">
+      <h2 className="text-center text-sm font-normal text-muted-foreground mb-3">
         Log in
       </h2>
 
-      <div className="group rounded-2xl bg-secondary/60 p-3 transition-shadow duration-300 hover:shadow-md hover:bg-secondary">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center shrink-0 transition-colors duration-300 group-hover:bg-primary">
-            <Hexagon
-              className="h-6 w-6 text-foreground transition-colors duration-300 group-hover:text-primary-foreground"
+      <div className="group rounded-xl bg-secondary/60 p-2.5 transition-shadow duration-300 hover:shadow-md hover:bg-secondary">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center shrink-0 transition-colors duration-300 group-hover:bg-primary">
+            <Droplets
+              className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-primary-foreground"
               strokeWidth={1.75}
             />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-base font-bold text-foreground">
-              Smartvatten HUB
+            <span className="text-sm font-bold text-foreground">
+              brewwater API
             </span>
-            <span className="text-sm text-muted-foreground">
-              für Immobilien
+            <span className="text-xs text-muted-foreground">
+              für Entwickler
             </span>
           </div>
         </div>
