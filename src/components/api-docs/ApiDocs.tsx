@@ -305,23 +305,23 @@ const FAQS = [
 function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-2xl bg-muted/50 px-6 py-5 transition-colors hover:bg-muted/70">
+    <div className="rounded-2xl bg-[#f4f4f5] px-7 py-6">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-5 text-left"
+        className="flex w-full items-start gap-6 text-left"
       >
-        <span className="shrink-0 text-sm font-medium tabular-nums text-muted-foreground/60">{num}</span>
-        <span className="flex-1 text-base font-semibold text-foreground">{q}</span>
-        <span className="shrink-0 text-xl font-light text-muted-foreground select-none">
-          {open ? "—" : "+"}
+        <span className="shrink-0 w-8 pt-0.5 text-sm font-medium tabular-nums text-foreground/30 select-none">{num}</span>
+        <span className="flex-1 text-[17px] font-semibold text-foreground leading-snug">{q}</span>
+        <span className="shrink-0 mt-0.5 text-2xl font-thin text-foreground/40 select-none leading-none">
+          {open ? "−" : "+"}
         </span>
       </button>
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          open ? "max-h-40 opacity-100 mt-4" : "max-h-0 opacity-0"
+          open ? "max-h-48 opacity-100 mt-4" : "max-h-0 opacity-0"
         }`}
       >
-        <p className="pl-10 text-[15px] leading-relaxed text-muted-foreground">{a}</p>
+        <p className="ml-14 text-[15px] leading-relaxed text-muted-foreground">{a}</p>
       </div>
     </div>
   );
@@ -329,7 +329,7 @@ function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
 
 function FaqList() {
   return (
-    <div className="mx-auto max-w-3xl space-y-3">
+    <div className="mx-auto max-w-3xl space-y-4">
       {FAQS.map((f, i) => (
         <FaqItem
           key={i}
