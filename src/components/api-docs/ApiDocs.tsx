@@ -308,7 +308,7 @@ function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
     <div className="rounded-2xl bg-[#f4f4f5]">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full cursor-pointer items-center gap-3 px-4 pt-5 pb-5 text-left transition-[padding-bottom] duration-300 ease-in-out md:gap-6 md:px-8 md:pt-8 md:pb-8"
+        className="flex w-full cursor-pointer items-center gap-6 px-8 py-10 text-left"
       >
         <span className="shrink-0 w-8 pt-0.5 text-sm font-medium tabular-nums text-foreground/30 select-none">{num}</span>
         <span className="flex-1 text-[17px] font-semibold text-foreground leading-snug">{q}</span>
@@ -321,7 +321,7 @@ function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
           open ? "max-h-48 opacity-100 mt-4" : "max-h-0 opacity-0"
         }`}
       >
-        <p className="px-4 pb-5 md:px-8 md:pb-8 text-[15px] leading-relaxed text-muted-foreground">{a}</p>
+        <p className="px-8 pb-8 text-[15px] leading-relaxed text-muted-foreground">{a}</p>
       </div>
     </div>
   );
