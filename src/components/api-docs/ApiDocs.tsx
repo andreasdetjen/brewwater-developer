@@ -476,13 +476,13 @@ export function ApiDocs() {
             <div className="grid lg:grid-cols-[260px_1fr] divide-y lg:divide-y-0 lg:divide-x divide-border bg-white">
               {/* Sidebar */}
               <div className="bg-[#f8f9fa] p-4 overflow-hidden">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 px-2 mb-3">Hamburg · 8 Profile</div>
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 px-2 mb-3">Hamburg · 5 Werke</div>
                 <div className="space-y-1">
                   {[
                     { name: "Baursberg", sub: "Wasserwerk", plz: "5 PLZ", active: false },
-                    { name: "Hamburg gesamt", sub: "Ø Stadt", plz: "", active: true },
+                    { name: "Billbrook", sub: "Wasserwerk", plz: "8 PLZ", active: false },
                     { name: "Langenhorn", sub: "Wasserwerk", plz: "1 PLZ", active: false },
-                    { name: "Rothenburgsort", sub: "Wasserwerk", plz: "20 PLZ", active: false },
+                    { name: "Rothenburgsort", sub: "Wasserwerk", plz: "20 PLZ", active: true },
                     { name: "Stellingen", sub: "Wasserwerk", plz: "6 PLZ", active: false },
                   ].map((item) => (
                     <div
@@ -504,8 +504,8 @@ export function ApiDocs() {
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-foreground">Hamburg gesamt</h3>
-                    <p className="text-[12px] text-slate-400 mt-0.5">HAMBURG WASSER · Stadtdurchschnitt</p>
+                    <h3 className="text-lg font-semibold text-foreground">Rothenburgsort</h3>
+                    <p className="text-[12px] text-slate-400 mt-0.5">HAMBURG WASSER · Wasserwerk</p>
                   </div>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-600 border border-emerald-100">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
