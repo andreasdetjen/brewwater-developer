@@ -400,7 +400,7 @@ export function ApiDocs() {
               {loginOpen && (
                 <div
                   ref={loginRef}
-                  className="absolute right-0 top-[calc(100%+8px)] z-50"
+                  className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+8px)] z-50"
                   style={{ animation: "none" }}
                 >
                   <LoginModal />
