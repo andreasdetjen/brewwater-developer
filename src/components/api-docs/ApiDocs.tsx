@@ -279,6 +279,69 @@ function HeroIllustration() {
   );
 }
 
+const FAQS = [
+  {
+    q: "Welche Städte sind über die API verfügbar?",
+    a: "Aktuell sind über 50 deutsche Städte abgedeckt, darunter Berlin, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf, Leipzig und viele mehr. Die Liste wird laufend erweitert.",
+  },
+  {
+    q: "Wie authentifiziere ich mich bei der API?",
+    a: "Jede Anfrage benötigt einen Bearer-Token im Authorization-Header. API-Keys erhalten Sie nach der Registrierung in Ihrem brewwater-Dashboard unter Settings → API Keys.",
+  },
+  {
+    q: "Wie aktuell sind die Wasserdaten?",
+    a: "Die Daten werden direkt von den offiziellen Wasserversorgern bezogen und regelmäßig aktualisiert — in der Regel monatlich oder bei Änderungen durch den Versorger.",
+  },
+  {
+    q: "Gibt es einen kostenlosen Tarif?",
+    a: "Ja — der Free-Tarif erlaubt 60 Anfragen pro Minute und 10.000 Anfragen pro Monat. Keine Kreditkarte erforderlich. Für höhere Volumen bieten wir kostenpflichtige Tarife an.",
+  },
+  {
+    q: "Kann ich die API in meine Brauerei-Software integrieren?",
+    a: "Absolut. Die REST-API liefert alle brauereitauglichen Parameter wie pH, Gesamthärte, Restalkalität, Calcium, Magnesium und weitere Mineralien direkt als JSON — kompatibel mit allen gängigen Brauerei-Tools.",
+  },
+];
+
+function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-2xl bg-muted/50 px-6 py-5 transition-colors hover:bg-muted/70">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-5 text-left"
+      >
+        <span className="shrink-0 text-sm font-medium tabular-nums text-muted-foreground/60">{num}</span>
+        <span className="flex-1 text-base font-semibold text-foreground">{q}</span>
+        <span className="shrink-0 text-xl font-light text-muted-foreground select-none">
+          {open ? "—" : "+"}
+        </span>
+      </button>
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          open ? "max-h-40 opacity-100 mt-4" : "max-h-0 opacity-0"
+        }`}
+      >
+        <p className="pl-10 text-[15px] leading-relaxed text-muted-foreground">{a}</p>
+      </div>
+    </div>
+  );
+}
+
+function FaqList() {
+  return (
+    <div className="mx-auto max-w-3xl space-y-3">
+      {FAQS.map((f, i) => (
+        <FaqItem
+          key={i}
+          num={String(i + 1).padStart(2, "0")}
+          q={f.q}
+          a={f.a}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function ApiDocs() {
   const [loginOpen, setLoginOpen] = useState(false);
   const loginRef = useRef<HTMLDivElement>(null);
@@ -553,6 +616,18 @@ X-RateLimit-Reset: 1716831600`}
               <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-RateLimit-Reset</code>.
             </p>
           </Section>
+
+          {/* FAQ */}
+          <div className="py-20 sm:py-28">
+            <div className="text-center mb-14">
+              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                Brauchen Sie Hilfe?
+              </div>
+              <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">Fragen und Antworten</h2>
+            </div>
+            <FaqList />
+          </div>
 
           {/* CTA */}
           <div className="py-20 sm:py-28">
