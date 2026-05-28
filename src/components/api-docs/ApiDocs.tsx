@@ -437,6 +437,79 @@ export function ApiDocs() {
           <HeroIllustration />
         </section>
 
+        {/* Browser Mockup — Code Playground */}
+        <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32 lg:px-10">
+          <div className="text-center mb-12">
+            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-5">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              Live Playground
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Eine Anfrage — alle Wasserdaten.
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
+              Einfache REST-API, sofort einsatzbereit. Kein SDK, keine Konfiguration.
+            </p>
+          </div>
+
+          {/* Browser frame */}
+          <div className="rounded-2xl border border-border bg-card shadow-2xl overflow-hidden">
+            {/* Browser chrome */}
+            <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-3">
+              <div className="flex gap-1.5">
+                <div className="h-3 w-3 rounded-full bg-red-400" />
+                <div className="h-3 w-3 rounded-full bg-yellow-400" />
+                <div className="h-3 w-3 rounded-full bg-green-400" />
+              </div>
+              <div className="flex-1 mx-4">
+                <div className="rounded-md bg-background border border-border px-3 py-1 text-xs text-muted-foreground font-mono">
+                  api.brewwater.de/v1/water-profile?city=München
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="text-[10px] text-muted-foreground">200 OK · 14ms</span>
+              </div>
+            </div>
+
+            {/* Split view */}
+            <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border">
+              {/* Left: Request */}
+              <div className="bg-[#0f172a] p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Request</span>
+                  <span className="rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-semibold text-primary">GET</span>
+                </div>
+                <pre className="font-mono text-[13px] leading-relaxed overflow-x-auto">
+<code><span className="text-slate-400">curl </span><span className="text-emerald-400">https://api.brewwater.de/v1/water-profile</span>{"\n"}
+<span className="text-slate-400">  -H </span><span className="text-amber-300">"Authorization: Bearer bw_live_sk_..."</span>{"\n"}
+<span className="text-slate-400">  -G </span><span className="text-slate-400">--data-urlencode </span><span className="text-amber-300">"city=München"</span>
+</code></pre>
+              </div>
+
+              {/* Right: Response */}
+              <div className="bg-[#0f172a] p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Response</span>
+                  <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">200 OK</span>
+                </div>
+                <pre className="font-mono text-[13px] leading-relaxed overflow-x-auto">
+<code><span className="text-slate-400">{"{"}</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"city"</span><span className="text-slate-400">: </span><span className="text-amber-300">"München"</span><span className="text-slate-400">,</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"supplier"</span><span className="text-slate-400">: </span><span className="text-amber-300">"Stadtwerke München"</span><span className="text-slate-400">,</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"ph"</span><span className="text-slate-400">: </span><span className="text-emerald-400">7.4</span><span className="text-slate-400">,</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"total_hardness_dh"</span><span className="text-slate-400">: </span><span className="text-emerald-400">14.9</span><span className="text-slate-400">,</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"hardness_class"</span><span className="text-slate-400">: </span><span className="text-amber-300">"hard"</span><span className="text-slate-400">,</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"calcium_mgl"</span><span className="text-slate-400">: </span><span className="text-emerald-400">92</span><span className="text-slate-400">,</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"magnesium_mgl"</span><span className="text-slate-400">: </span><span className="text-emerald-400">18.3</span><span className="text-slate-400">,</span>{"\n"}
+<span className="text-slate-400">  </span><span className="text-sky-300">"residual_alkalinity_dh"</span><span className="text-slate-400">: </span><span className="text-emerald-400">3.1</span>{"\n"}
+<span className="text-slate-400">{"}"}</span>
+</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Stats strip */}
         <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32">
           <div className="grid grid-cols-2 gap-y-10 border-y border-border py-12 sm:grid-cols-4">
