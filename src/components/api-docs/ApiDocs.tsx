@@ -25,74 +25,92 @@ const NAV = [
   { id: "rate-limits", label: "Rate Limits" },
 ];
 
-const CURL = `curl https://api.brewwater.de/v1/water-profile?city=Berlin \\
-  -H "Authorization: Bearer bw_live_sk_..."`;
+const CURL = `curl "https://api.brewwater.de/v1/water?plz=20095" \\
+  -H "X-API-Key: bw_live_..."`;
 
 const JS = `const res = await fetch(
-  "https://api.brewwater.de/v1/water-profile?city=Berlin",
-  { headers: { Authorization: "Bearer bw_live_sk_..." } }
+  "https://api.brewwater.de/v1/water?plz=20095",
+  { headers: { "X-API-Key": "bw_live_..." } }
 );
 const data = await res.json();
-console.log(data.ph, data.total_hardness_dh);`;
+console.log(data.values.ph, data.values.total_hardness_dH);`;
 
 const PY = `import requests
 
 r = requests.get(
-    "https://api.brewwater.de/v1/water-profile",
-    params={"city": "Berlin"},
-    headers={"Authorization": "Bearer bw_live_sk_..."},
+    "https://api.brewwater.de/v1/water",
+    params={"plz": "20095"},
+    headers={"X-API-Key": "bw_live_..."},
 )
 data = r.json()
-print(data["ph"], data["total_hardness_dh"])`;
+print(data["values"]["ph"], data["values"]["total_hardness_dH"])`;
 
 const RESPONSE = `{
-  "city": "Berlin",
-  "plz": "10115",
-  "supplier": "Berliner Wasserbetriebe",
-  "measured_at": "2026-04-12T08:00:00Z",
-  "ph": 7.6,
-  "total_hardness_dh": 18.4,
-  "hardness_class": "hard",
-  "calcium_mgl": 105,
-  "magnesium_mgl": 9.2,
-  "sodium_mgl": 38,
-  "chloride_mgl": 56,
-  "sulfate_mgl": 120,
-  "nitrate_mgl": 6.1,
-  "bicarbonate_mgl": 198,
-  "residual_alkalinity_dh": 4.8
+  "plz": "20095",
+  "city": "Hamburg",
+  "district": "Rothenburgsort",
+  "waterworks": "HAMBURG WASSER",
+  "provider": "HAMBURG WASSER",
+  "precision": "waterworks",
+  "confidence": "high",
+  "data_date": "2025-01-01",
+  "source": {
+    "name": "HAMBURG WASSER Jahresbericht 2024",
+    "url": "https://www.hamburgwasser.de"
+  },
+  "values": {
+    "total_hardness_dH": 8.7,
+    "carbonate_hardness_dH": 5.4,
+    "acid_capacity_KS43_mmolL": 1.93,
+    "calcium_mgL": 50,
+    "magnesium_mgL": 6,
+    "sodium_mgL": 18,
+    "chloride_mgL": 32,
+    "sulfate_mgL": 44,
+    "hydrogencarbonate_mgL": 119,
+    "ph": 7.6,
+    "conductivity_uScm": 320
+  }
 }`;
 
 const PARAMS = [
-  { name: "plz", type: "string", req: "optional", desc: "5-digit German postal code. Either plz or city is required." },
-  { name: "city", type: "string", req: "optional", desc: "City name (e.g. \"Berlin\"). Case-insensitive." },
-  { name: "include", type: "string[]", req: "optional", desc: "Comma-separated extras: minerals, history, brewing." },
+  { name: "plz", type: "string", req: "required", desc: "5-stellige deutsche Postleitzahl. Beispiel: 20095" },
+  { name: "format", type: "string", req: "optional", desc: "\"full\" (Standard) oder \"minimal\" — minimal liefert nur Härte, Calcium, Magnesium und pH." },
 ];
 
 const SCHEMA = [
-  { f: "city", t: "string", d: "City name the profile applies to." },
-  { f: "plz", t: "string", d: "Representative postal code for the supply area." },
-  { f: "supplier", t: "string", d: "Water utility operating the network." },
-  { f: "measured_at", t: "ISO 8601", d: "Timestamp of the most recent measurement." },
-  { f: "ph", t: "number", d: "pH-Wert des Wassers (0–14). Ideal für Espresso: 6.5–7.5." },
-  { f: "total_hardness_dh", t: "number", d: "Gesamthärte in deutschen Graden (°dH). SCA-Zielbereich: 3–8 °dH." },
-  { f: "hardness_class", t: "enum", d: "Härtebereich: soft, medium oder hard." },
-  { f: "calcium_mgl", t: "number", d: "Calcium in mg/L — beeinflusst Extraktion und Körper des Kaffees." },
-  { f: "magnesium_mgl", t: "number", d: "Magnesium in mg/L — verstärkt Aroma und Löslichkeit der Kaffeeöle." },
-  { f: "sodium_mgl", t: "number", d: "Natrium in mg/L — zu hoch wirkt flach und süßlich." },
-  { f: "chloride_mgl", t: "number", d: "Chlorid in mg/L — betont Süße und Vollmundigkeit." },
-  { f: "sulfate_mgl", t: "number", d: "Sulfat in mg/L — betont Trockenheit und Bitterkeit." },
-  { f: "nitrate_mgl", t: "number", d: "Nitrat in mg/L — sollte für Kaffeebereitung möglichst gering sein." },
-  { f: "bicarbonate_mgl", t: "number", d: "Hydrogencarbonat in mg/L — Pufferwirkung, beeinflusst den pH im Brühvorgang." },
-  { f: "residual_alkalinity_dh", t: "number", d: "Restalkalität in °dH — zentraler Wert für Espresso-Extraktion und Säurebalance." },
+  { f: "plz", t: "string", d: "Abgefragte Postleitzahl." },
+  { f: "city", t: "string", d: "Stadtname des Versorgungsgebiets." },
+  { f: "district", t: "string|null", d: "Stadtteil oder Versorgungszone, falls bekannt." },
+  { f: "waterworks", t: "string", d: "Name des Wasserwerks." },
+  { f: "provider", t: "string", d: "Name des Wasserversorgers." },
+  { f: "precision", t: "string", d: "Genauigkeit der PLZ-Zuordnung: waterworks, supply_area oder city." },
+  { f: "confidence", t: "string", d: "Vertrauensniveau: high, medium oder low." },
+  { f: "data_date", t: "string", d: "Datum des Analysedatenstands (YYYY-MM-DD)." },
+  { f: "source.name", t: "string", d: "Quellenbezeichnung (z. B. Jahresbericht des Versorgers)." },
+  { f: "source.url", t: "string|null", d: "URL zur Originalquelle, sofern verfügbar." },
+  { f: "values.total_hardness_dH", t: "number|null", d: "Gesamthärte in °dH. SCA-Zielbereich für Espresso: 3–8 °dH." },
+  { f: "values.carbonate_hardness_dH", t: "number|null", d: "Karbonathärte in °dH." },
+  { f: "values.acid_capacity_KS43_mmolL", t: "number|null", d: "Säurekapazität KS4,3 in mmol/L." },
+  { f: "values.calcium_mgL", t: "number|null", d: "Calcium in mg/L — beeinflusst Extraktion und Körper." },
+  { f: "values.magnesium_mgL", t: "number|null", d: "Magnesium in mg/L — verstärkt Aroma und Löslichkeit der Kaffeeöle." },
+  { f: "values.sodium_mgL", t: "number|null", d: "Natrium in mg/L — zu hoch wirkt flach und süßlich." },
+  { f: "values.chloride_mgL", t: "number|null", d: "Chlorid in mg/L — betont Süße und Vollmundigkeit." },
+  { f: "values.sulfate_mgL", t: "number|null", d: "Sulfat in mg/L — betont Trockenheit und Bitterkeit." },
+  { f: "values.hydrogencarbonate_mgL", t: "number|null", d: "Hydrogencarbonat in mg/L — Pufferwirkung, beeinflusst den pH im Brühvorgang." },
+  { f: "values.ph", t: "number|null", d: "pH-Wert des Wassers (0–14). Ideal für Espresso: 6.5–7.5." },
+  { f: "values.conductivity_uScm", t: "number|null", d: "Leitfähigkeit in µS/cm." },
 ];
 
 const ERRORS = [
-  { code: "400", name: "bad_request", desc: "Missing or invalid query parameters." },
-  { code: "401", name: "unauthorized", desc: "API key missing, malformed, or revoked." },
-  { code: "404", name: "not_found", desc: "No profile available for the given plz or city." },
-  { code: "429", name: "rate_limited", desc: "You exceeded your plan's request quota." },
-  { code: "500", name: "server_error", desc: "Unexpected error — please retry with backoff." },
+  { code: "400", name: "missing_parameter", desc: "Parameter 'plz' fehlt. Beispiel: ?plz=20095" },
+  { code: "401", name: "missing_api_key", desc: "Kein API-Key übergeben. Header: X-API-Key: bw_live_..." },
+  { code: "401", name: "invalid_api_key", desc: "API-Key unbekannt oder falsches Format." },
+  { code: "403", name: "api_key_disabled", desc: "Der API-Key wurde deaktiviert." },
+  { code: "422", name: "invalid_plz", desc: "Ungültige PLZ — muss genau 5 Ziffern haben." },
+  { code: "404", name: "not_found", desc: "Keine Daten für diese PLZ. Abdeckung: ~700 PLZ in 20+ deutschen Städten." },
+  { code: "429", name: "rate_limit_exceeded", desc: "Monatliches Limit erreicht. Reset-Datum steht im Header X-RateLimit-Reset." },
+  { code: "500", name: "database_error", desc: "Interner Fehler — bitte mit Backoff wiederholen." },
 ];
 
 function CodeBlock({ code }: { code: string }) {
@@ -216,7 +234,7 @@ function HeroIllustration() {
           {/* Left cards */}
           <div className="hidden flex-col gap-6 lg:flex">
             {[
-              { label: "GET /water-profile?city=Berlin", icon: Globe2 },
+              { label: "GET /v1/water?plz=10115", icon: Globe2 },
               { label: "RA: 4.8 · pH 7.2 · °dH 14.1", icon: Activity },
             ].map((c) => (
               <div key={c.label} className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl shadow-black/10 backdrop-blur">
@@ -294,7 +312,7 @@ const FAQS = [
   },
   {
     q: "Gibt es einen kostenlosen Tarif?",
-    a: "Ja — der Free-Tarif erlaubt 60 Anfragen pro Minute und 10.000 Anfragen pro Monat. Keine Kreditkarte erforderlich. Für Röstereien, Apps und höhere Volumen bieten wir skalierbare Tarife an.",
+    a: "Ja — der Free-Tarif erlaubt 100 Anfragen pro Monat, komplett kostenlos und ohne Kreditkarte. Für Röstereien, Apps und höhere Volumen gibt es Starter (1.000/Monat), Pro (10.000/Monat) und Unlimited. Einfach anfragen.",
   },
   {
     q: "Kann ich die API in meine Kaffee-App oder Rösterei-Software integrieren?",
@@ -467,7 +485,7 @@ export function ApiDocs() {
               </div>
               <div className="flex-1 mx-4">
                 <div className="rounded-md bg-background border border-border px-3 py-1 text-xs text-muted-foreground font-mono">
-                  api.brewwater.de/v1/water-profile?city=Hamburg
+                  api.brewwater.de/v1/water?plz=20097
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -591,9 +609,9 @@ export function ApiDocs() {
             </p>
             <ol className="space-y-6">
               {[
-                { t: "API-Key erstellen", d: "Registrieren Sie sich auf brewwater.de und generieren Sie einen Key unter Settings → API Keys." },
-                { t: "Anfrage authentifizieren", d: "Übergeben Sie den Key als Bearer-Token im Authorization-Header jeder Anfrage." },
-                { t: "Wasserchemie abrufen", d: "GET-Anfrage mit plz oder city — Sie erhalten pH, Restalkalität, Härte und alle Mineralien als JSON." },
+                { t: "API-Key anfordern", d: "Schreiben Sie uns an api@brewwater.de — Sie erhalten Ihren Key innerhalb von 24 Stunden. Free-Plan: 100 Anfragen/Monat, kostenlos." },
+                { t: "Anfrage authentifizieren", d: "Übergeben Sie den Key im X-API-Key-Header jeder Anfrage. Kein OAuth, kein Bearer-Token." },
+                { t: "Wasserchemie abrufen", d: "GET-Anfrage mit einer PLZ — Sie erhalten pH, Gesamthärte, Calcium, Magnesium und alle weiteren Parameter als JSON." },
               ].map((s, i) => (
                 <li key={s.t} className="flex gap-5">
                   <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
@@ -612,23 +630,20 @@ export function ApiDocs() {
           <Section id="authentication" eyebrow="02" title="Authentication">
             <p>
               Jede Anfrage benötigt einen{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">Authorization</code>{" "}
-              Header mit einem Bearer-Token. Es gibt zwei Key-Typen:{" "}
-              <strong className="text-foreground">test</strong> (
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_test_sk_</code>
-              ) und <strong className="text-foreground">live</strong> (
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_sk_</code>
-              ).
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-API-Key</code>{" "}
+              Header. Keys beginnen immer mit{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_</code>
+              {" "}und werden nach der Registrierung einmalig ausgestellt.
             </p>
-            <CodeBlock code={`Authorization: Bearer bw_live_sk_4f8a...c91d`} />
+            <CodeBlock code={`X-API-Key: bw_live_4f8a...c91d`} />
           </Section>
 
           <Section id="endpoints" eyebrow="03" title="Endpoints">
             <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-5 py-4 font-mono text-sm overflow-x-auto">
               <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap">GET</span>
-              <span className="text-foreground whitespace-nowrap">/api/v1/water-profile</span>
+              <span className="text-foreground whitespace-nowrap">/v1/water?plz=20095</span>
             </div>
-            <p>Liefert das aktuelle Wasserprofil einer deutschen Stadt oder PLZ — mit allen Parametern, die für Espresso und Kaffee relevant sind.</p>
+            <p>Liefert das aktuelle Wasserprofil für eine deutsche Postleitzahl — mit allen Parametern, die für Espresso und Kaffee relevant sind.</p>
 
             <div>
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Query parameters</h3>
@@ -727,20 +742,45 @@ export function ApiDocs() {
 
           <Section id="rate-limits" eyebrow="06" title="Rate Limits">
             <p>
-              Der kostenlose Tarif erlaubt 60 Anfragen/Minute und 10.000 Anfragen/Monat. Bezahlte
-              Tarife skalieren bis 10.000 Anfragen/Minute. Jede Antwort enthält die aktuellen
-              Limits in den Headern:
+              Limits gelten <strong className="text-foreground">pro Monat</strong>, nicht pro Minute.
+              Jede Antwort enthält den aktuellen Stand in den Headern:
             </p>
             <CodeBlock
-              code={`X-RateLimit-Limit: 60
-X-RateLimit-Remaining: 58
-X-RateLimit-Reset: 1716831600`}
+              code={`X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 847
+X-RateLimit-Reset: 2026-07-01T00:00:00.000Z
+X-Request-Id: 3f2a1b4c-...`}
             />
+            <div className="overflow-x-auto rounded-2xl border border-border">
+              <table className="w-full min-w-[420px] text-sm">
+                <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Plan</th>
+                    <th className="px-4 py-3 font-medium">Anfragen/Monat</th>
+                    <th className="px-4 py-3 font-medium">Preis</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border bg-card">
+                  {[
+                    { plan: "Free", limit: "100", price: "kostenlos" },
+                    { plan: "Starter", limit: "1.000", price: "auf Anfrage" },
+                    { plan: "Pro", limit: "10.000", price: "auf Anfrage" },
+                    { plan: "Unlimited", limit: "∞", price: "auf Anfrage" },
+                  ].map((r) => (
+                    <tr key={r.plan}>
+                      <td className="px-4 py-3 font-medium text-foreground">{r.plan}</td>
+                      <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{r.limit}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{r.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <p>
               Beim Überschreiten erhalten Sie{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">429 rate_limited</code>.
-              Wiederholen Sie nach dem Zeitstempel in{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-RateLimit-Reset</code>.
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">429 rate_limit_exceeded</code>.
+              Der Zähler resettet automatisch am 1. des Folgemonats (Zeitstempel in{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-RateLimit-Reset</code>).
             </p>
           </Section>
 
