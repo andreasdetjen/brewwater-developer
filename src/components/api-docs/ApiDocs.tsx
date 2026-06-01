@@ -438,6 +438,8 @@ function LivePlayground() {
       );
       const ms = Date.now() - start;
       const data = await res.json();
+      // Remove external source URL — we don't link away from our portal
+      if (data?.source) delete data.source.url;
       setResult({ status: res.status, ms, data });
       setResultKey((k) => k + 1);
     } catch {
