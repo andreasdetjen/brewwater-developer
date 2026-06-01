@@ -818,108 +818,133 @@ export function ApiDocs() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="py-20 sm:py-28">
+        <section id="pricing" className="py-20 sm:py-28"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, oklch(0.32 0.12 264) 0%, oklch(0.14 0.04 264) 60%)" }}
+        >
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
-            <div className="text-center mb-16">
-              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Preise
-              </div>
-              <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+            <div className="text-center mb-14">
+              <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
                 Fang kostenlos an.
               </h2>
-              <p className="mt-5 text-muted-foreground text-lg max-w-lg mx-auto leading-relaxed">
+              <p className="mt-4 text-white/60 text-lg max-w-lg mx-auto">
                 Kein Abo, keine Kreditkarte. Einfach Key anfordern und loslegen.
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
               {[
                 {
                   name: "Free",
                   limit: "100",
+                  limitSub: "Anfragen / Monat",
                   price: "Kostenlos",
-                  desc: "Zum Ausprobieren und für kleine Projekte.",
+                  priceColor: false,
+                  desc: "Zum Ausprobieren.",
                   highlight: false,
-                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "API Key per E-Mail"],
-                  cta: "Jetzt starten",
+                  features: [
+                    { t: "Alle Felder", d: "pH, Härte, Calcium, Magnesium u.v.m." },
+                    { t: "Alle Städte", d: "20+ Städte, ~700 PLZ" },
+                    { t: "API Key per E-Mail", d: "Innerhalb von 24h" },
+                  ],
+                  cta: "Kostenlos starten",
                 },
                 {
                   name: "Starter",
                   limit: "1.000",
+                  limitSub: "Anfragen / Monat",
                   price: "Auf Anfrage",
-                  desc: "Für Apps und erste produktive Integrationen.",
+                  priceColor: false,
+                  desc: "Für erste produktive Integrationen.",
                   highlight: false,
-                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "E-Mail Support"],
+                  features: [
+                    { t: "Alle Felder", d: "Vollständiges Wasserprofil" },
+                    { t: "Alle Städte", d: "20+ Städte, ~700 PLZ" },
+                    { t: "E-Mail Support", d: "Antwort innerhalb eines Werktags" },
+                  ],
                   cta: "Anfragen",
                 },
                 {
                   name: "Pro",
                   limit: "10.000",
+                  limitSub: "Anfragen / Monat",
                   price: "Auf Anfrage",
-                  desc: "Für Röstereien, SaaS-Produkte und Agenturen.",
+                  priceColor: true,
+                  desc: "Für Röstereien, Apps und Agenturen.",
                   highlight: true,
-                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "Priority Support"],
+                  features: [
+                    { t: "Alle Felder", d: "Vollständiges Wasserprofil" },
+                    { t: "Alle Städte", d: "20+ Städte, ~700 PLZ" },
+                    { t: "Priority Support", d: "Direkter Kontakt, schnelle Antwort" },
+                  ],
                   cta: "Anfragen",
                 },
                 {
                   name: "Unlimited",
                   limit: "∞",
+                  limitSub: "unbegrenzte Anfragen",
                   price: "Auf Anfrage",
-                  desc: "Für intensive und kommerzielle Nutzung ohne Limits.",
+                  priceColor: false,
+                  desc: "Für kommerzielle Nutzung ohne Limits.",
                   highlight: false,
-                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "Dedizierter Support"],
+                  features: [
+                    { t: "Alle Felder", d: "Vollständiges Wasserprofil" },
+                    { t: "Alle Städte", d: "20+ Städte, ~700 PLZ" },
+                    { t: "Dedizierter Support", d: "Persönlicher Ansprechpartner" },
+                  ],
                   cta: "Anfragen",
                 },
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col rounded-2xl p-8 ${
-                    plan.highlight
-                      ? "bg-[oklch(0.22_0.04_265)] text-white ring-2 ring-primary"
-                      : "bg-[oklch(0.18_0.02_265)] text-white"
+                  className={`relative flex flex-col rounded-2xl bg-white p-6 ${
+                    plan.highlight ? "ring-2 ring-primary shadow-2xl shadow-primary/30" : "shadow-lg shadow-black/20"
                   }`}
                 >
-                  {plan.highlight && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-4 py-1 text-[11px] font-bold uppercase tracking-widest text-primary-foreground">
-                      Beliebt
-                    </div>
-                  )}
+                  {/* Badge */}
+                  <div className="mb-5">
+                    <span className={`inline-flex rounded-md border px-3 py-1 text-[11px] font-semibold tracking-wide ${
+                      plan.highlight
+                        ? "border-primary/30 bg-primary/10 text-primary"
+                        : "border-border text-muted-foreground"
+                    }`}>
+                      {plan.name}
+                    </span>
+                  </div>
 
-                  {/* Plan name + desc */}
-                  <p className="text-lg font-semibold text-white mb-2">{plan.name}</p>
-                  <p className="text-[14px] text-white/50 leading-relaxed mb-8">{plan.desc}</p>
-
-                  {/* Price block */}
-                  <p className="text-5xl font-bold tracking-tight text-white mb-1">
-                    {plan.limit}
-                    <span className="text-xl font-normal text-white/40 ml-2">{plan.limit !== "∞" ? "req/Mo." : ""}</span>
+                  {/* Price */}
+                  <p className="text-[13px] text-muted-foreground mb-1">{plan.limitSub}</p>
+                  <p className="text-4xl font-bold tracking-tight text-foreground mb-1">{plan.limit}</p>
+                  <p className={`text-base font-semibold mb-1 ${plan.priceColor ? "text-primary" : "text-foreground"}`}>
+                    {plan.price}
                   </p>
-                  <p className="text-sm text-white/50 mb-8">{plan.price}</p>
+                  <p className="text-[13px] text-muted-foreground mb-6 leading-relaxed">{plan.desc}</p>
 
                   {/* CTA */}
                   <a
                     href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}&body=${encodeURIComponent(`Hallo,\n\nich möchte den ${plan.name}-Plan für brewwater anfragen.\n\nMein Anwendungsfall: `)}`}
-                    className={`block w-full rounded-xl py-3 text-center text-sm font-semibold transition mb-8 ${
+                    className={`block w-full rounded-xl py-2.5 text-center text-sm font-semibold transition mb-6 ${
                       plan.highlight
-                        ? "bg-white text-[oklch(0.22_0.04_265)] hover:bg-white/90"
-                        : "bg-white/10 text-white hover:bg-white/20"
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "bg-foreground text-background hover:bg-foreground/85"
                     }`}
                   >
                     {plan.cta}
                   </a>
 
                   {/* Divider */}
-                  <div className="h-px bg-white/10 mb-6" />
+                  <div className="h-px bg-border mb-5" />
 
                   {/* Features */}
                   <ul className="space-y-4 flex-1">
                     {plan.features.map((f) => (
-                      <li key={f} className="flex items-center gap-3 text-[14px] text-white/60">
-                        <svg className="h-4 w-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <li key={f.t} className="flex items-start gap-3">
+                        <svg className="mt-0.5 h-4 w-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
-                        {f}
+                        <div>
+                          <p className="text-[13px] font-semibold text-foreground">{f.t}</p>
+                          <p className="text-[12px] text-muted-foreground leading-relaxed">{f.d}</p>
+                        </div>
                       </li>
                     ))}
                   </ul>
