@@ -23,6 +23,7 @@ const NAV = [
   { id: "schema", label: "Response Schema" },
   { id: "errors", label: "Error Codes" },
   { id: "rate-limits", label: "Rate Limits" },
+  { id: "pricing", label: "Preise" },
 ];
 
 const CURL = `curl "https://api.brewwater.de/v1/water?plz=20095" \\
@@ -811,6 +812,119 @@ export function ApiDocs() {
                   {s.k}
                 </div>
                 <div className="mt-2 text-sm text-muted-foreground">{s.v}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section id="pricing" className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32 lg:px-10">
+          <div className="text-center mb-12">
+            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-5">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              Preise
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Fang kostenlos an.
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
+              Kein Abo, keine Kreditkarte für den Start. Einfach Key anfordern und loslegen.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                name: "Free",
+                price: "0 €",
+                period: "für immer",
+                limit: "100",
+                highlight: false,
+                features: ["100 Anfragen / Monat", "Alle Felder enthalten", "Alle Städte", "X-API-Key Auth"],
+                cta: "Jetzt starten",
+              },
+              {
+                name: "Starter",
+                price: "auf Anfrage",
+                period: "",
+                limit: "1.000",
+                highlight: false,
+                features: ["1.000 Anfragen / Monat", "Alle Felder enthalten", "Alle Städte", "E-Mail Support"],
+                cta: "Anfragen",
+              },
+              {
+                name: "Pro",
+                price: "auf Anfrage",
+                period: "",
+                limit: "10.000",
+                highlight: true,
+                features: ["10.000 Anfragen / Monat", "Alle Felder enthalten", "Alle Städte", "Priority Support"],
+                cta: "Anfragen",
+              },
+              {
+                name: "Unlimited",
+                price: "auf Anfrage",
+                period: "",
+                limit: "∞",
+                highlight: false,
+                features: ["Unbegrenzte Anfragen", "Alle Felder enthalten", "Alle Städte", "Dedizierter Support"],
+                cta: "Anfragen",
+              },
+            ].map((plan) => (
+              <div
+                key={plan.name}
+                className={`relative rounded-2xl border p-6 flex flex-col ${
+                  plan.highlight
+                    ? "border-primary bg-primary text-primary-foreground shadow-xl shadow-primary/20"
+                    : "border-border bg-card"
+                }`}
+              >
+                {plan.highlight && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-3 py-0.5 text-[11px] font-semibold text-background">
+                    Beliebt
+                  </div>
+                )}
+                <div className="mb-5">
+                  <div className={`text-xs font-semibold uppercase tracking-widest mb-2 ${plan.highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                    {plan.name}
+                  </div>
+                  <div className={`text-3xl font-semibold tracking-tight ${plan.highlight ? "text-primary-foreground" : "text-foreground"}`}>
+                    {plan.price}
+                  </div>
+                  {plan.period && (
+                    <div className={`text-sm mt-0.5 ${plan.highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                      {plan.period}
+                    </div>
+                  )}
+                  <div className={`mt-3 font-mono text-2xl font-semibold ${plan.highlight ? "text-primary-foreground" : "text-foreground"}`}>
+                    {plan.limit}
+                    <span className={`text-sm font-normal ml-1 ${plan.highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                      {plan.limit !== "∞" ? "req / Monat" : ""}
+                    </span>
+                  </div>
+                </div>
+
+                <ul className="space-y-2.5 mb-6 flex-1">
+                  {plan.features.map((f) => (
+                    <li key={f} className={`flex items-center gap-2 text-[13px] ${plan.highlight ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
+                      <svg className={`h-4 w-4 shrink-0 ${plan.highlight ? "text-primary-foreground" : "text-primary"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}&body=${encodeURIComponent(`Hallo,\n\nich möchte den ${plan.name}-Plan für brewwater anfragen.\n\nMein Anwendungsfall: `)}`}
+                  className={`block w-full rounded-xl py-2.5 text-center text-sm font-medium transition ${
+                    plan.highlight
+                      ? "bg-white text-primary hover:bg-white/90"
+                      : "bg-foreground text-background hover:bg-foreground/90"
+                  }`}
+                >
+                  {plan.cta}
+                </a>
               </div>
             ))}
           </div>
