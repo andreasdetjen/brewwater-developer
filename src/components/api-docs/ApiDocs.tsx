@@ -835,10 +835,64 @@ export function ApiDocs() {
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
                 {[
-                  { name: "Free", limit: "100", desc: "Zum Ausprobieren.", highlight: false, cta: "Kostenlos starten" },
-                  { name: "Starter", limit: "1.000", desc: "Erste Integrationen.", highlight: false, cta: "Anfragen" },
-                  { name: "Pro", limit: "10.000", desc: "Für Röstereien & Apps.", highlight: true, cta: "Anfragen" },
-                  { name: "Unlimited", limit: "∞", desc: "Ohne Limits.", highlight: false, cta: "Anfragen" },
+                  {
+                    name: "Free",
+                    price: "0 €",
+                    priceSub: "für immer",
+                    limit: "100",
+                    desc: "Zum Ausprobieren.",
+                    highlight: false,
+                    cta: "Kostenlos starten",
+                    features: [
+                      "Vollständiges Wasserprofil",
+                      "Alle 50+ Städte & PLZ",
+                      "Community Support",
+                    ],
+                  },
+                  {
+                    name: "Starter",
+                    price: "29 €",
+                    priceSub: "pro Monat",
+                    limit: "1.000",
+                    desc: "Erste Integrationen.",
+                    highlight: false,
+                    cta: "Anfragen",
+                    features: [
+                      "Alles aus Free",
+                      "E-Mail Support (1 Werktag)",
+                      "99,9 % Uptime SLA",
+                    ],
+                  },
+                  {
+                    name: "Pro",
+                    price: "99 €",
+                    priceSub: "pro Monat",
+                    limit: "10.000",
+                    desc: "Für Röstereien & Apps.",
+                    highlight: true,
+                    cta: "Anfragen",
+                    features: [
+                      "Alles aus Starter",
+                      "Priority Support",
+                      "Höhere Rate-Limits",
+                      "Webhooks bei Updates",
+                    ],
+                  },
+                  {
+                    name: "Unlimited",
+                    price: "Auf Anfrage",
+                    priceSub: "individuell",
+                    limit: "∞",
+                    desc: "Ohne Limits.",
+                    highlight: false,
+                    cta: "Anfragen",
+                    features: [
+                      "Alles aus Pro",
+                      "Dedizierter Ansprechpartner",
+                      "Custom SLA & Verträge",
+                      "On-Premise auf Anfrage",
+                    ],
+                  },
                 ].map((plan) => (
                   <div
                     key={plan.name}
@@ -857,15 +911,20 @@ export function ApiDocs() {
                     <p className="mt-1 text-[13px] text-muted-foreground">{plan.desc}</p>
 
                     <div className="mt-6">
-                      <div className="font-display text-4xl font-semibold tracking-tight text-foreground leading-none">
-                        {plan.limit}
+                      <div className="font-display text-3xl font-semibold tracking-tight text-foreground leading-none">
+                        {plan.price}
                       </div>
-                      <p className="mt-2 text-xs text-muted-foreground">Anfragen / Monat</p>
+                      <p className="mt-2 text-xs text-muted-foreground">{plan.priceSub}</p>
+                    </div>
+
+                    <div className="mt-5 rounded-lg bg-muted/50 px-3 py-2">
+                      <span className="text-sm font-semibold text-foreground">{plan.limit}</span>
+                      <span className="ml-1.5 text-xs text-muted-foreground">Anfragen / Monat</span>
                     </div>
 
                     <a
                       href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}`}
-                      className={`mt-8 block w-full rounded-lg py-2.5 text-center text-sm font-semibold transition ${
+                      className={`mt-5 block w-full rounded-lg py-2.5 text-center text-sm font-semibold transition ${
                         plan.highlight
                           ? "bg-primary text-primary-foreground hover:bg-primary/90"
                           : "border border-border bg-background text-foreground hover:bg-muted"
@@ -873,6 +932,15 @@ export function ApiDocs() {
                     >
                       {plan.cta}
                     </a>
+
+                    <ul className="mt-6 space-y-2.5 border-t border-border pt-5">
+                      {plan.features.map((f) => (
+                        <li key={f} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
