@@ -819,7 +819,7 @@ export function ApiDocs() {
 
         {/* Pricing */}
         <section id="pricing" className="py-20 sm:py-28"
-          style={{ background: "radial-gradient(ellipse at 50% 0%, oklch(0.32 0.12 264) 0%, oklch(0.14 0.04 264) 60%)" }}
+          style={{ background: "radial-gradient(ellipse at 50% 0%, oklch(0.42 0.12 264) 0%, oklch(0.26 0.06 264) 60%)" }}
         >
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
             <div className="text-center mb-14">
