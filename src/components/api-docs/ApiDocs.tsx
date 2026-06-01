@@ -499,18 +499,29 @@ function LivePlayground() {
       {/* Browser frame */}
       <div className="rounded-2xl border border-border bg-card shadow-2xl overflow-hidden">
         {/* Browser chrome */}
-        <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-3">
-          <div className="flex gap-1.5 shrink-0">
-            <div className="h-3 w-3 rounded-full bg-red-400" />
-            <div className="h-3 w-3 rounded-full bg-yellow-400" />
-            <div className="h-3 w-3 rounded-full bg-green-400" />
+        <div className="border-b border-border bg-muted/40 px-3 py-2.5 sm:px-4 sm:py-3">
+          {/* Top row: dots + status */}
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex gap-1.5">
+              <div className="h-3 w-3 rounded-full bg-red-400" />
+              <div className="h-3 w-3 rounded-full bg-yellow-400" />
+              <div className="h-3 w-3 rounded-full bg-green-400" />
+            </div>
+            {result && (
+              <div className="flex items-center gap-1">
+                <div className={`h-2 w-2 rounded-full ${result.status === 200 ? "bg-emerald-400" : "bg-red-400"}`} />
+                <span className="text-[10px] text-muted-foreground">{result.status} · {result.ms}ms</span>
+              </div>
+            )}
           </div>
-          <form onSubmit={handleSubmit} className="flex flex-1 items-center gap-2 mx-4 min-w-0">
+          {/* URL bar + button */}
+          <form onSubmit={handleSubmit} className="flex items-center gap-2">
             <div
-              className="flex flex-1 items-center rounded-md bg-background border border-border px-3 py-1 font-mono text-xs text-muted-foreground cursor-text min-w-0"
+              className="flex flex-1 items-center rounded-md bg-background border border-border px-2.5 py-1.5 font-mono text-xs text-muted-foreground cursor-text min-w-0"
               onClick={() => inputRef.current?.focus()}
             >
-              <span className="shrink-0">api.brewwater.de/v1/water?plz=</span>
+              <span className="hidden sm:inline shrink-0">api.brewwater.de/v1/water?plz=</span>
+              <span className="sm:hidden shrink-0 text-muted-foreground/60">…/water?plz=</span>
               <input
                 ref={inputRef}
                 value={plz}
@@ -527,42 +538,36 @@ function LivePlayground() {
             <button
               type="submit"
               disabled={loading}
-              className="shrink-0 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
+              className="shrink-0 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
             >
-              {loading ? "…" : "Enter ↵"}
+              {loading ? "…" : "↵"}
             </button>
           </form>
-          {result && (
-            <div className="flex items-center gap-1 shrink-0">
-              <div className={`h-2 w-2 rounded-full ${result.status === 200 ? "bg-emerald-400" : "bg-red-400"}`} />
-              <span className="text-[10px] text-muted-foreground whitespace-nowrap">{result.status} · {result.ms}ms</span>
-            </div>
-          )}
         </div>
 
         {/* City chips */}
-        <div className="flex items-center gap-2 border-b border-border bg-muted/20 px-4 py-2 overflow-x-auto">
-          <span className="text-[10px] text-muted-foreground shrink-0">Schnellauswahl:</span>
+        <div className="flex items-center gap-2 border-b border-border bg-muted/20 px-3 py-2 overflow-x-auto sm:px-4">
+          <span className="text-[10px] text-muted-foreground shrink-0">Schnell:</span>
           {DEMO_CITIES.map((c) => (
             <button
               key={c.plz}
               onClick={() => handleChip(c.plz)}
               disabled={loading}
-              className={`shrink-0 rounded-full border px-3 py-0.5 text-[11px] font-medium transition ${
+              className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition ${
                 plz === c.plz
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground"
               } disabled:opacity-40`}
             >
-              {c.label} · {c.plz}
+              {c.label}
             </button>
           ))}
         </div>
 
-        {/* Content */}
+        {/* Content — JSON top, visual bottom on mobile; side-by-side on desktop */}
         <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border min-h-[420px]">
           {/* Left: JSON */}
-          <div className="bg-[#1e1e2e] p-6 overflow-auto">
+          <div className="bg-[#1e1e2e] p-4 sm:p-6 overflow-auto max-h-[320px] lg:max-h-none">
             <div className="text-[10px] font-semibold uppercase tracking-widest text-white/30 mb-3">JSON Response</div>
             {!result && !loading && !error && (
               <div className="text-white/20 text-sm font-mono">{`// Warte auf Antwort…`}</div>
@@ -598,7 +603,7 @@ function LivePlayground() {
           </div>
 
           {/* Right: Visual */}
-          <div className="bg-white p-8">
+          <div className="bg-white p-5 sm:p-8">
             {!result && !loading && (
               <div className="flex h-full items-center justify-center text-sm text-slate-300">
                 Ergebnis erscheint hier
@@ -624,7 +629,7 @@ function LivePlayground() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-5 sm:mb-6">
                   <AnimatedStat label="Gesamthärte" value={values.total_hardness_dH} unit="°dH" />
                   <AnimatedStat label="pH-Wert" value={values.ph} unit="" />
                   <AnimatedStat label="Calcium" value={values.calcium_mgL} unit="mg/L" />
@@ -782,7 +787,7 @@ export function ApiDocs() {
 
         {/* Stats strip */}
         <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32">
-          <div className="grid grid-cols-2 gap-y-10 border-y border-border py-12 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-y-8 border-y border-border py-10 sm:grid-cols-4">
             {[
               { k: "50+", v: "deutsche Städte" },
               { k: "99.98%", v: "Uptime SLA" },

@@ -85,15 +85,15 @@ function Badge({ type }: { type: BadgeType }) {
 
 function Entry({ entry }: { entry: ChangelogItem }) {
   return (
-    <div className="grid gap-6 lg:grid-cols-[200px_1fr]">
-      {/* Left: date + version */}
-      <div className="pt-1">
+    <div className="grid gap-4 lg:grid-cols-[200px_1fr] lg:gap-6">
+      {/* Left: date + version — inline on mobile, sidebar on desktop */}
+      <div className="flex items-center gap-3 lg:block lg:pt-1">
         <div className="text-sm font-medium text-foreground">{entry.date}</div>
-        <div className="mt-1 font-mono text-xs text-muted-foreground">{entry.version}</div>
+        <div className="font-mono text-xs text-muted-foreground lg:mt-1">{entry.version}</div>
       </div>
 
       {/* Right: content */}
-      <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+      <div className="rounded-2xl border border-border bg-card p-5 sm:p-8">
         <div className="flex flex-wrap items-center gap-3 mb-5">
           <Badge type={entry.badge} />
           <h2 className="text-lg font-semibold text-foreground">{entry.title}</h2>
@@ -195,14 +195,14 @@ export function Changelog() {
         </div>
 
         {/* Timeline */}
-        <div className="relative space-y-10">
-          {/* Vertical line */}
-          <div className="absolute left-0 top-0 bottom-0 w-px bg-border lg:left-[200px] hidden lg:block" />
+        <div className="relative space-y-8">
+          {/* Vertical line — desktop only */}
+          <div className="absolute top-0 bottom-0 w-px bg-border hidden lg:block" style={{ left: "200px" }} />
 
           {ENTRIES.map((entry, i) => (
             <div key={i} className="relative lg:pl-10">
-              {/* Dot on timeline */}
-              <div className="absolute left-[-4px] top-[6px] h-2 w-2 rounded-full bg-primary hidden lg:block" style={{ left: "196px" }} />
+              {/* Dot on timeline — desktop only */}
+              <div className="absolute top-[6px] h-2 w-2 rounded-full bg-primary hidden lg:block" style={{ left: "196px" }} />
               <Entry entry={entry} />
             </div>
           ))}
