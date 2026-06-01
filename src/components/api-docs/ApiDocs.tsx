@@ -362,21 +362,68 @@ function FaqList() {
 
 const TEST_KEY = "bw_live_test1234567890abcdef1234567890ab";
 
+const DEMO_CITIES = [
+  { label: "Hamburg", plz: "20095" },
+  { label: "Berlin", plz: "10115" },
+  { label: "Köln", plz: "50667" },
+  { label: "Stuttgart", plz: "70173" },
+];
+
 type ApiResult = {
   status: number;
   ms: number;
   data: Record<string, unknown>;
 } | null;
 
+function useCountUp(target: number | null, duration = 600) {
+  const [display, setDisplay] = useState<number | null>(null);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (target === null) { setDisplay(null); return; }
+    const finalTarget = target;
+    const start = performance.now();
+    const from = 0;
+    function tick(now: number) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const val = from + (finalTarget - from) * ease;
+      setDisplay(Math.round(val * 100) / 100);
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    }
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current != null) cancelAnimationFrame(rafRef.current); };
+  }, [target, duration]);
+
+  return display;
+}
+
+function AnimatedStat({ value, unit, label }: { value: unknown; unit: string; label: string }) {
+  const num = typeof value === "number" ? value : null;
+  const displayed = useCountUp(num);
+  return (
+    <div className="rounded-xl border border-border bg-[#f8f9fa] px-3 py-3">
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">{label}</div>
+      <div className="text-xl font-semibold text-foreground tracking-tight">
+        {displayed != null ? displayed : (value != null ? String(value) : "—")}
+        <span className="text-xs font-normal text-slate-400 ml-1">{unit}</span>
+      </div>
+    </div>
+  );
+}
+
 function LivePlayground() {
-  const [plz, setPlz] = useState("20095");
+  const [plz, setPlz] = useState("");
+  const [typingPlz, setTypingPlz] = useState(""); // animated display value
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ApiResult>(null);
   const [error, setError] = useState<string | null>(null);
+  const [resultKey, setResultKey] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const didAutoDemo = useRef(false);
 
-  async function fetchWater(e: React.FormEvent) {
-    e.preventDefault();
-    if (!/^\d{5}$/.test(plz.trim())) {
+  async function fetchWater(targetPlz: string) {
+    if (!/^\d{5}$/.test(targetPlz.trim())) {
       setError("Bitte eine gültige 5-stellige PLZ eingeben.");
       return;
     }
@@ -386,17 +433,48 @@ function LivePlayground() {
     const start = Date.now();
     try {
       const res = await fetch(
-        `https://api.brewwater.de/v1/water?plz=${plz.trim()}`,
+        `https://api.brewwater.de/v1/water?plz=${targetPlz.trim()}`,
         { headers: { "X-API-Key": TEST_KEY } },
       );
       const ms = Date.now() - start;
       const data = await res.json();
       setResult({ status: res.status, ms, data });
+      setResultKey((k) => k + 1);
     } catch {
       setError("Verbindung fehlgeschlagen. Bitte erneut versuchen.");
     } finally {
       setLoading(false);
     }
+  }
+
+  // Auto-demo on mount: type PLZ character by character, then fire
+  useEffect(() => {
+    if (didAutoDemo.current) return;
+    didAutoDemo.current = true;
+    const target = "20095";
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      const current = target.slice(0, i);
+      setPlz(current);
+      setTypingPlz(current);
+      if (i === target.length) {
+        clearInterval(interval);
+        setTimeout(() => fetchWater(target), 400);
+      }
+    }, 120);
+    return () => clearInterval(interval);
+  }, []);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    fetchWater(plz);
+  }
+
+  function handleChip(chipPlz: string) {
+    setPlz(chipPlz);
+    setTypingPlz(chipPlz);
+    fetchWater(chipPlz);
   }
 
   const values = result?.data?.values as Record<string, unknown> | undefined;
@@ -405,7 +483,7 @@ function LivePlayground() {
     <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32 lg:px-10">
       <div className="text-center mb-12">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-5">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Live Playground
         </div>
         <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -420,81 +498,120 @@ function LivePlayground() {
       <div className="rounded-2xl border border-border bg-card shadow-2xl overflow-hidden">
         {/* Browser chrome */}
         <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-3">
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 shrink-0">
             <div className="h-3 w-3 rounded-full bg-red-400" />
             <div className="h-3 w-3 rounded-full bg-yellow-400" />
             <div className="h-3 w-3 rounded-full bg-green-400" />
           </div>
-          <form onSubmit={fetchWater} className="flex flex-1 items-center gap-2 mx-4">
-            <div className="flex flex-1 items-center gap-2 rounded-md bg-background border border-border px-3 py-1 font-mono text-xs text-muted-foreground">
+          <form onSubmit={handleSubmit} className="flex flex-1 items-center gap-2 mx-4 min-w-0">
+            <div
+              className="flex flex-1 items-center rounded-md bg-background border border-border px-3 py-1 font-mono text-xs text-muted-foreground cursor-text min-w-0"
+              onClick={() => inputRef.current?.focus()}
+            >
               <span className="shrink-0">api.brewwater.de/v1/water?plz=</span>
               <input
+                ref={inputRef}
                 value={plz}
-                onChange={(e) => setPlz(e.target.value)}
+                onChange={(e) => { setPlz(e.target.value); setTypingPlz(e.target.value); }}
                 maxLength={5}
-                className="w-14 bg-transparent text-foreground outline-none font-mono"
-                placeholder="20095"
+                className="w-[3.5rem] bg-transparent text-foreground outline-none font-mono caret-primary"
+                placeholder="00000"
+                aria-label="PLZ eingeben"
               />
+              {loading && (
+                <span className="ml-2 h-3 w-3 rounded-full border-2 border-primary/30 border-t-primary animate-spin shrink-0" />
+              )}
             </div>
             <button
               type="submit"
               disabled={loading}
               className="shrink-0 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
             >
-              {loading ? "..." : "Anfragen"}
+              {loading ? "…" : "Enter ↵"}
             </button>
           </form>
           {result && (
             <div className="flex items-center gap-1 shrink-0">
               <div className={`h-2 w-2 rounded-full ${result.status === 200 ? "bg-emerald-400" : "bg-red-400"}`} />
-              <span className="text-[10px] text-muted-foreground">{result.status} · {result.ms}ms</span>
+              <span className="text-[10px] text-muted-foreground whitespace-nowrap">{result.status} · {result.ms}ms</span>
             </div>
           )}
         </div>
 
+        {/* City chips */}
+        <div className="flex items-center gap-2 border-b border-border bg-muted/20 px-4 py-2 overflow-x-auto">
+          <span className="text-[10px] text-muted-foreground shrink-0">Schnellauswahl:</span>
+          {DEMO_CITIES.map((c) => (
+            <button
+              key={c.plz}
+              onClick={() => handleChip(c.plz)}
+              disabled={loading}
+              className={`shrink-0 rounded-full border px-3 py-0.5 text-[11px] font-medium transition ${
+                plz === c.plz
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground"
+              } disabled:opacity-40`}
+            >
+              {c.label} · {c.plz}
+            </button>
+          ))}
+        </div>
+
         {/* Content */}
-        <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border min-h-[400px]">
-          {/* Left: JSON response */}
+        <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border min-h-[420px]">
+          {/* Left: JSON */}
           <div className="bg-[#1e1e2e] p-6 overflow-auto">
             <div className="text-[10px] font-semibold uppercase tracking-widest text-white/30 mb-3">JSON Response</div>
             {!result && !loading && !error && (
-              <div className="text-white/30 text-sm font-mono">
-                {`// PLZ eingeben und "Anfragen" klicken`}
-              </div>
+              <div className="text-white/20 text-sm font-mono">{`// Warte auf Antwort…`}</div>
             )}
             {loading && (
-              <div className="flex items-center gap-2 text-white/40 text-sm">
-                <div className="h-3 w-3 rounded-full border-2 border-white/20 border-t-white/60 animate-spin" />
-                Anfrage läuft...
+              <div className="space-y-2">
+                {[80, 60, 90, 50, 70].map((w, i) => (
+                  <div key={i} className={`h-3 rounded bg-white/10 animate-pulse`} style={{ width: `${w}%`, animationDelay: `${i * 80}ms` }} />
+                ))}
               </div>
             )}
-            {error && <div className="text-red-400 text-sm font-mono">{`// Fehler: ${error}`}</div>}
+            {error && <div className="text-red-400 text-sm font-mono">{`// ${error}`}</div>}
             {result && (
-              <pre className="text-[12px] leading-relaxed text-emerald-300 font-mono overflow-x-auto whitespace-pre-wrap">
-                {JSON.stringify(result.data, null, 2)}
+              <pre
+                key={resultKey}
+                className="text-[12px] leading-relaxed font-mono overflow-x-auto whitespace-pre-wrap"
+                style={{ animation: "fadeIn 0.3s ease" }}
+              >
+                {JSON.stringify(result.data, null, 2)
+                  .split("\n")
+                  .map((line, i) => {
+                    const isKey = /^\s+"[^"]+":/.test(line);
+                    const isStr = /:\s+"/.test(line);
+                    const isNum = /:\s+[\d.]+/.test(line) && !isStr;
+                    return (
+                      <span key={i} className={isNum ? "text-amber-300" : isStr ? "text-emerald-300" : isKey ? "text-sky-300" : "text-white/50"}>
+                        {line}{"\n"}
+                      </span>
+                    );
+                  })}
               </pre>
             )}
           </div>
 
-          {/* Right: Visual summary */}
+          {/* Right: Visual */}
           <div className="bg-white p-8">
             {!result && !loading && (
-              <div className="flex h-full items-center justify-center text-sm text-slate-400">
+              <div className="flex h-full items-center justify-center text-sm text-slate-300">
                 Ergebnis erscheint hier
               </div>
             )}
             {loading && (
               <div className="flex h-full items-center justify-center">
-                <div className="h-8 w-8 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+                <div className="h-10 w-10 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
               </div>
             )}
             {result && result.status === 200 && values && (
-              <div>
+              <div key={resultKey} style={{ animation: "fadeIn 0.4s ease" }}>
                 <div className="flex items-start justify-between mb-6">
                   <div>
-                    <h3 className="text-xl font-semibold text-foreground">
-                      {result.data.city as string}
-                    </h3>
+                    <h3 className="text-xl font-semibold text-foreground">{result.data.city as string}</h3>
                     <p className="text-[12px] text-slate-400 mt-1">
                       {result.data.waterworks as string} · PLZ {result.data.plz as string}
                     </p>
@@ -505,25 +622,13 @@ function LivePlayground() {
                   </span>
                 </div>
 
-                {/* Key stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                  {[
-                    { label: "Gesamthärte", value: values.total_hardness_dH, unit: "°dH" },
-                    { label: "pH-Wert", value: values.ph, unit: "" },
-                    { label: "Calcium", value: values.calcium_mgL, unit: "mg/L" },
-                    { label: "Magnesium", value: values.magnesium_mgL, unit: "mg/L" },
-                  ].map((s) => (
-                    <div key={s.label} className="rounded-xl border border-border bg-[#f8f9fa] px-3 py-3">
-                      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">{s.label}</div>
-                      <div className="text-xl font-semibold text-foreground tracking-tight">
-                        {s.value != null ? String(s.value) : "—"}
-                        <span className="text-xs font-normal text-slate-400 ml-1">{s.unit}</span>
-                      </div>
-                    </div>
-                  ))}
+                  <AnimatedStat label="Gesamthärte" value={values.total_hardness_dH} unit="°dH" />
+                  <AnimatedStat label="pH-Wert" value={values.ph} unit="" />
+                  <AnimatedStat label="Calcium" value={values.calcium_mgL} unit="mg/L" />
+                  <AnimatedStat label="Magnesium" value={values.magnesium_mgL} unit="mg/L" />
                 </div>
 
-                {/* All values */}
                 <div>
                   <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Alle Werte</div>
                   <div className="grid grid-cols-2 gap-x-6 gap-y-3">
@@ -551,18 +656,18 @@ function LivePlayground() {
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
                   <div className="text-4xl mb-3">⚠️</div>
-                  <div className="text-sm font-medium text-foreground">
-                    {(result.data.error as string) ?? "Fehler"}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {(result.data.message as string) ?? ""}
-                  </div>
+                  <div className="text-sm font-medium text-foreground">{(result.data.error as string) ?? "Fehler"}</div>
+                  <div className="text-xs text-muted-foreground mt-1">{(result.data.message as string) ?? ""}</div>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+      `}</style>
     </section>
   );
 }
