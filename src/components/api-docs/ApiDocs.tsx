@@ -856,13 +856,12 @@ export function ApiDocs() {
                     </div>
                     <p className="mt-1 text-[13px] text-muted-foreground">{plan.desc}</p>
 
-                    <div className="mt-6 flex items-baseline gap-1.5">
-                      <span className="font-display text-4xl font-semibold tracking-tight text-foreground">
+                    <div className="mt-6">
+                      <div className="font-display text-4xl font-semibold tracking-tight text-foreground leading-none">
                         {plan.limit}
-                      </span>
-                      <span className="text-sm text-muted-foreground">Anfragen</span>
+                      </div>
+                      <p className="mt-2 text-xs text-muted-foreground">Anfragen / Monat</p>
                     </div>
-                    <p className="mt-0.5 text-xs text-muted-foreground">pro Monat</p>
 
                     <a
                       href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}`}
