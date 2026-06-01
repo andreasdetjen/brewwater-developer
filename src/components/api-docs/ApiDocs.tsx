@@ -823,10 +823,10 @@ export function ApiDocs() {
             <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                  07
+                  Preise
                 </div>
                 <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
-                  Pricing
+                  Fang kostenlos an.
                 </h2>
                 <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
                   Jeder Plan enthält das vollständige Wasserprofil. Unterschiede gibt es nur beim Anfragelimit.
