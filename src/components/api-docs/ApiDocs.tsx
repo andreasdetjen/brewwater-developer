@@ -431,20 +431,26 @@ function LivePlayground() {
   const [resultKey, setResultKey] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const didAutoDemo = useRef(false);
+  const abortRef = useRef<AbortController | null>(null);
 
   async function fetchWater(targetPlz: string) {
     if (!/^\d{5}$/.test(targetPlz.trim())) {
       setError("Bitte eine gültige 5-stellige PLZ eingeben.");
       return;
     }
+    // Cancel any in-flight request
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setLoading(true);
     setError(null);
-    setResult(null);
+    // Keep previous result visible while loading — don't flash empty
     const start = Date.now();
     try {
       const res = await fetch(
         `https://api.brewwater.de/v1/water?plz=${targetPlz.trim()}`,
-        { headers: { "X-API-Key": TEST_KEY } },
+        { headers: { "X-API-Key": TEST_KEY }, signal: controller.signal },
       );
       const ms = Date.now() - start;
       const data = await res.json();
@@ -452,7 +458,10 @@ function LivePlayground() {
       if (data?.source) delete data.source.url;
       setResult({ status: res.status, ms, data });
       setResultKey((k) => k + 1);
-    } catch {
+      setError(null);
+    } catch (err) {
+      // Ignore AbortError — it's intentional when a new request starts
+      if (err instanceof DOMException && err.name === "AbortError") return;
       setError("Verbindung fehlgeschlagen. Bitte erneut versuchen.");
     } finally {
       setLoading(false);
@@ -582,14 +591,14 @@ function LivePlayground() {
             {!result && !loading && !error && (
               <div className="text-white/20 text-sm font-mono">{`// Warte auf Antwort…`}</div>
             )}
-            {loading && (
+            {loading && !result && (
               <div className="space-y-2">
                 {[80, 60, 90, 50, 70].map((w, i) => (
                   <div key={i} className={`h-3 rounded bg-white/10 animate-pulse`} style={{ width: `${w}%`, animationDelay: `${i * 80}ms` }} />
                 ))}
               </div>
             )}
-            {error && <div className="text-red-400 text-sm font-mono">{`// ${error}`}</div>}
+            {error && !loading && <div className="text-red-400 text-sm font-mono">{`// ${error}`}</div>}
             {result && (
               <pre
                 key={resultKey}
@@ -619,7 +628,7 @@ function LivePlayground() {
                 Ergebnis erscheint hier
               </div>
             )}
-            {loading && (
+            {loading && !result && (
               <div className="flex h-full items-center justify-center">
                 <div className="h-10 w-10 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
               </div>
@@ -833,7 +842,7 @@ export function ApiDocs() {
                 </p>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:items-stretch">
                 {[
                   {
                     name: "Free",
@@ -876,21 +885,6 @@ export function ApiDocs() {
                       "Priority Support",
                       "Höhere Rate-Limits",
                       "Webhooks bei Updates",
-                    ],
-                  },
-                  {
-                    name: "Unlimited",
-                    price: "Auf Anfrage",
-                    priceSub: "individuell",
-                    limit: "∞",
-                    desc: "Ohne Limits.",
-                    highlight: false,
-                    cta: "Anfragen",
-                    features: [
-                      "Alles aus Pro",
-                      "Dedizierter Ansprechpartner",
-                      "Custom SLA & Verträge",
-                      "On-Premise auf Anfrage",
                     ],
                   },
                 ].map((plan) => (
