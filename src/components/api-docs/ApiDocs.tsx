@@ -216,6 +216,15 @@ function MobileNav() {
                 </a>
               </li>
             ))}
+            <li>
+              <a
+                href="/changelog"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-3 py-2 text-[15px] text-foreground/80 transition hover:bg-accent hover:text-accent-foreground"
+              >
+                Changelog
+              </a>
+            </li>
           </ul>
         </nav>
       </SheetContent>
@@ -720,6 +729,9 @@ export function ApiDocs() {
                 {n.label}
               </a>
             ))}
+            <a href="/changelog" className="text-sm font-medium text-foreground/70 transition hover:text-foreground">
+              Changelog
+            </a>
           </nav>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" className="hidden gap-1.5 sm:inline-flex">
