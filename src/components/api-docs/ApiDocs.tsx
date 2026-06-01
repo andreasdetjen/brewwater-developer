@@ -1057,8 +1057,13 @@ X-Request-Id: 3f2a1b4c-...`}
               <div>
                 <div className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-4">Ressourcen</div>
                 <ul className="space-y-3 text-sm text-white/75">
-                  {["Changelog", "Status", "GitHub", "brewwater.de"].map((l) => (
-                    <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
+                  {[
+                    { label: "Changelog", href: "/changelog" },
+                    { label: "Status", href: "#" },
+                    { label: "GitHub", href: "https://github.com/andreasdetjen/brewwater-developer" },
+                    { label: "brewwater.de", href: "https://brewwater.de" },
+                  ].map((l) => (
+                    <li key={l.label}><a href={l.href} className="hover:text-white transition-colors">{l.label}</a></li>
                   ))}
                 </ul>
               </div>

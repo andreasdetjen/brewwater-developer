@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { ApiDocs } from "@/components/api-docs/ApiDocs";
+import { Changelog } from "@/components/changelog/Changelog";
 import { LoginModal } from "@/components/login/LoginModal";
 import "./styles.css";
 
@@ -11,6 +12,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ApiDocs />} />
+        <Route path="/changelog" element={<Changelog />} />
         <Route
           path="/login"
           element={
