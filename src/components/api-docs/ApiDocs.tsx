@@ -818,26 +818,28 @@ export function ApiDocs() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="py-20 sm:py-28 bg-muted/60"
-        >
+        <section id="pricing" className="py-20 sm:py-28 bg-background">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
-            <div className="text-center mb-14">
+            <div className="text-center mb-16">
+              <span className="inline-block text-xs font-semibold uppercase tracking-[0.18em] text-primary mb-4">
+                Preise
+              </span>
               <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
                 Fang kostenlos an.
               </h2>
-              <p className="mt-4 text-muted-foreground text-lg max-w-lg mx-auto">
+              <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
                 Kein Abo, keine Kreditkarte. Einfach Key anfordern und loslegen.
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:items-stretch">
               {[
                 {
                   name: "Free",
+                  price: "Kostenlos",
+                  priceSub: "für immer",
                   limit: "100",
                   limitSub: "Anfragen / Monat",
-                  price: "Kostenlos",
-                  priceColor: false,
                   desc: "Zum Ausprobieren.",
                   highlight: false,
                   features: [
@@ -849,10 +851,10 @@ export function ApiDocs() {
                 },
                 {
                   name: "Starter",
+                  price: "Auf Anfrage",
+                  priceSub: "individuell",
                   limit: "1.000",
                   limitSub: "Anfragen / Monat",
-                  price: "Auf Anfrage",
-                  priceColor: false,
                   desc: "Für erste produktive Integrationen.",
                   highlight: false,
                   features: [
@@ -864,10 +866,10 @@ export function ApiDocs() {
                 },
                 {
                   name: "Pro",
+                  price: "Auf Anfrage",
+                  priceSub: "individuell",
                   limit: "10.000",
                   limitSub: "Anfragen / Monat",
-                  price: "Auf Anfrage",
-                  priceColor: true,
                   desc: "Für Röstereien, Apps und Agenturen.",
                   highlight: true,
                   features: [
@@ -879,10 +881,10 @@ export function ApiDocs() {
                 },
                 {
                   name: "Unlimited",
+                  price: "Auf Anfrage",
+                  priceSub: "individuell",
                   limit: "∞",
                   limitSub: "unbegrenzte Anfragen",
-                  price: "Auf Anfrage",
-                  priceColor: false,
                   desc: "Für kommerzielle Nutzung ohne Limits.",
                   highlight: false,
                   features: [
@@ -895,51 +897,59 @@ export function ApiDocs() {
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col rounded-2xl bg-white p-6 ${
-                    plan.highlight ? "ring-2 ring-primary shadow-2xl shadow-primary/30" : "shadow-lg shadow-black/20"
+                  className={`relative flex flex-col rounded-2xl border bg-card p-7 transition ${
+                    plan.highlight
+                      ? "border-primary/40 shadow-xl shadow-primary/10 lg:-my-2 lg:scale-[1.02]"
+                      : "border-border shadow-sm hover:shadow-md hover:border-border/80"
                   }`}
                 >
-                  {/* Badge */}
-                  <div className="mb-5">
-                    <span className={`inline-flex rounded-md border px-3 py-1 text-[11px] font-semibold tracking-wide ${
-                      plan.highlight
-                        ? "border-primary/30 bg-primary/10 text-primary"
-                        : "border-border text-muted-foreground"
-                    }`}>
-                      {plan.name}
+                  {plan.highlight && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary-foreground shadow-sm">
+                      Beliebt
                     </span>
+                  )}
+
+                  {/* Header */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{plan.desc}</p>
                   </div>
 
                   {/* Price */}
-                  <p className="text-[13px] text-muted-foreground mb-1">{plan.limitSub}</p>
-                  <p className="text-4xl font-bold tracking-tight text-foreground mb-1">{plan.limit}</p>
-                  <p className={`text-base font-semibold mb-1 ${plan.priceColor ? "text-primary" : "text-foreground"}`}>
-                    {plan.price}
-                  </p>
-                  <p className="text-[13px] text-muted-foreground mb-6 leading-relaxed">{plan.desc}</p>
+                  <div className="mb-6">
+                    <div className="flex items-baseline gap-2">
+                      <span className={`text-3xl font-bold tracking-tight ${plan.highlight ? "text-primary" : "text-foreground"}`}>
+                        {plan.price}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">{plan.priceSub}</p>
+                    <div className="mt-4 flex items-baseline gap-2">
+                      <span className="text-2xl font-semibold text-foreground">{plan.limit}</span>
+                      <span className="text-sm text-muted-foreground">{plan.limitSub}</span>
+                    </div>
+                  </div>
 
                   {/* CTA */}
                   <a
                     href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}&body=${encodeURIComponent(`Hallo,\n\nich möchte den ${plan.name}-Plan für brewwater anfragen.\n\nMein Anwendungsfall: `)}`}
-                    className={`block w-full rounded-xl py-2.5 text-center text-sm font-semibold transition mb-6 ${
+                    className={`block w-full rounded-lg py-2.5 text-center text-sm font-semibold transition mb-6 ${
                       plan.highlight
                         ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                        : "bg-foreground text-background hover:bg-foreground/85"
+                        : "bg-secondary text-secondary-foreground hover:bg-secondary/70 border border-border"
                     }`}
                   >
                     {plan.cta}
                   </a>
 
-                  {/* Divider */}
-                  <div className="h-px bg-border mb-5" />
-
                   {/* Features */}
-                  <ul className="space-y-4 flex-1">
+                  <ul className="space-y-4 flex-1 border-t border-border pt-6">
                     {plan.features.map((f) => (
                       <li key={f.t} className="flex items-start gap-3">
-                        <svg className="mt-0.5 h-4 w-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
+                        <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${plan.highlight ? "bg-primary/10" : "bg-muted"}`}>
+                          <svg className="h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
                         <div>
                           <p className="text-[13px] font-semibold text-foreground">{f.t}</p>
                           <p className="text-[12px] text-muted-foreground leading-relaxed">{f.d}</p>
@@ -950,48 +960,57 @@ export function ApiDocs() {
                 </div>
               ))}
             </div>
-          </div>
-          {/* Feature comparison table */}
-          <div className="mt-12 mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
-            <div className="overflow-x-auto rounded-2xl border border-border bg-card">
-              <table className="w-full min-w-[560px] text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-widest text-muted-foreground w-1/2">Feature</th>
-                    {["Free", "Starter", "Pro", "Unlimited"].map((p) => (
-                      <th key={p} className="px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{p}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {[
-                    { label: "Anfragen / Monat", values: ["100", "1.000", "10.000", "∞"] },
-                    { label: "pH & Gesamthärte", values: [true, true, true, true] },
-                    { label: "Calcium & Magnesium", values: [true, true, true, true] },
-                    { label: "Sulfat, Chlorid, Natrium", values: [false, true, true, true] },
-                    { label: "Hydrogencarbonat & Säurekapazität", values: [false, true, true, true] },
-                    { label: "Karbonathärte & Leitfähigkeit", values: [false, true, true, true] },
-                    { label: "Metadaten (Wasserwerk, Quelle, Konfidenz)", values: [false, true, true, true] },
-                    { label: "Support", values: ["—", "E-Mail", "Priority", "Dediziert"] },
-                  ].map((row) => (
-                    <tr key={row.label} className="hover:bg-muted/40">
-                      <td className="px-5 py-3.5 text-[13px] text-foreground">{row.label}</td>
-                      {row.values.map((v, i) => (
-                        <td key={i} className="px-4 py-3.5 text-center">
-                          {v === true && (
-                            <svg className="mx-auto h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                          {v === false && <span className="text-muted-foreground/40">—</span>}
-                          {typeof v === "string" && v !== "—" && <span className="text-[13px] font-medium text-foreground">{v}</span>}
-                          {v === "—" && <span className="text-muted-foreground/40">—</span>}
-                        </td>
+
+            {/* Feature comparison table */}
+            <div className="mt-20">
+              <div className="mb-8 text-center">
+                <h3 className="text-2xl font-semibold tracking-tight text-foreground">
+                  Alle Features im Vergleich
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Jeder Plan enthält alle Datenfelder. Unterschiede gibt es nur bei Limit und Support.
+                </p>
+              </div>
+              <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-sm">
+                <table className="w-full min-w-[560px] text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/30">
+                      <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-widest text-muted-foreground w-1/2">Feature</th>
+                      {["Free", "Starter", "Pro", "Unlimited"].map((p) => (
+                        <th key={p} className={`px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-widest ${p === "Pro" ? "text-primary" : "text-muted-foreground"}`}>{p}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {[
+                      { label: "Anfragen / Monat", values: ["100", "1.000", "10.000", "∞"] },
+                      { label: "pH & Gesamthärte", values: [true, true, true, true] },
+                      { label: "Calcium & Magnesium", values: [true, true, true, true] },
+                      { label: "Sulfat, Chlorid, Natrium", values: [false, true, true, true] },
+                      { label: "Hydrogencarbonat & Säurekapazität", values: [false, true, true, true] },
+                      { label: "Karbonathärte & Leitfähigkeit", values: [false, true, true, true] },
+                      { label: "Metadaten (Wasserwerk, Quelle, Konfidenz)", values: [false, true, true, true] },
+                      { label: "Support", values: ["—", "E-Mail", "Priority", "Dediziert"] },
+                    ].map((row) => (
+                      <tr key={row.label} className="transition-colors hover:bg-muted/30">
+                        <td className="px-5 py-3.5 text-[13px] text-foreground">{row.label}</td>
+                        {row.values.map((v, i) => (
+                          <td key={i} className={`px-4 py-3.5 text-center ${i === 2 ? "bg-primary/[0.03]" : ""}`}>
+                            {v === true && (
+                              <svg className="mx-auto h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                            {v === false && <span className="text-muted-foreground/40">—</span>}
+                            {typeof v === "string" && v !== "—" && <span className="text-[13px] font-medium text-foreground">{v}</span>}
+                            {v === "—" && <span className="text-muted-foreground/40">—</span>}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
