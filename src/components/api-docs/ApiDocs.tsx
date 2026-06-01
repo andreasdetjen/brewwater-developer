@@ -365,7 +365,7 @@ const TEST_KEY = "bw_live_test1234567890abcdef1234567890ab";
 const DEMO_CITIES = [
   { label: "Hamburg", plz: "20095" },
   { label: "Berlin", plz: "10115" },
-  { label: "Düsseldorf", plz: "40210" },
+  { label: "Hannover", plz: "30159" },
   { label: "Stuttgart", plz: "70173" },
 ];
 
@@ -642,11 +642,11 @@ function LivePlayground() {
                       { l: "Sulfat", v: values.sulfate_mgL, u: "mg/L" },
                       { l: "Hydrogencarbonat", v: values.hydrogencarbonate_mgL, u: "mg/L" },
                       { l: "Leitfähigkeit", v: values.conductivity_uScm, u: "µS/cm" },
-                    ].map((item) => (
+                    ].filter((item) => item.v != null).map((item) => (
                       <div key={item.l} className="flex flex-col">
                         <div className="text-[11px] text-slate-400">{item.l}</div>
                         <div className="text-[13px] font-medium text-foreground mt-0.5">
-                          {item.v != null ? `${item.v} ${item.u}` : "—"}
+                          {`${item.v} ${item.u}`}
                         </div>
                       </div>
                     ))}
