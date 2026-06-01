@@ -818,7 +818,7 @@ export function ApiDocs() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="py-20 sm:py-28 border-t border-border">
+        <section id="pricing" className="py-20 sm:py-28">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-10">
             <div className="text-center mb-16">
               <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
@@ -841,7 +841,7 @@ export function ApiDocs() {
                   price: "Kostenlos",
                   desc: "Zum Ausprobieren und für kleine Projekte.",
                   highlight: false,
-                  features: ["100 Anfragen / Monat", "Alle Felder & Städte", "API Key per E-Mail"],
+                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "API Key per E-Mail"],
                   cta: "Jetzt starten",
                 },
                 {
@@ -850,7 +850,7 @@ export function ApiDocs() {
                   price: "Auf Anfrage",
                   desc: "Für Apps und erste produktive Integrationen.",
                   highlight: false,
-                  features: ["1.000 Anfragen / Monat", "Alle Felder & Städte", "E-Mail Support"],
+                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "E-Mail Support"],
                   cta: "Anfragen",
                 },
                 {
@@ -859,65 +859,70 @@ export function ApiDocs() {
                   price: "Auf Anfrage",
                   desc: "Für Röstereien, SaaS-Produkte und Agenturen.",
                   highlight: true,
-                  features: ["10.000 Anfragen / Monat", "Alle Felder & Städte", "Priority Support"],
+                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "Priority Support"],
                   cta: "Anfragen",
                 },
                 {
                   name: "Unlimited",
                   limit: "∞",
                   price: "Auf Anfrage",
-                  desc: "Keine Limits. Für intensive oder kommerzielle Nutzung.",
+                  desc: "Für intensive und kommerzielle Nutzung ohne Limits.",
                   highlight: false,
-                  features: ["Unbegrenzte Anfragen", "Alle Felder & Städte", "Dedizierter Support"],
+                  features: ["Alle Felder enthalten", "Alle Städte & PLZ", "Dedizierter Support"],
                   cta: "Anfragen",
                 },
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col rounded-2xl border p-6 ${
+                  className={`relative flex flex-col rounded-2xl p-6 ${
                     plan.highlight
-                      ? "border-primary/40 bg-primary/5 ring-1 ring-primary/20"
-                      : "border-border bg-card"
+                      ? "bg-[oklch(0.22_0.04_265)] text-white ring-2 ring-primary"
+                      : "bg-[oklch(0.18_0.02_265)] text-white"
                   }`}
                 >
                   {plan.highlight && (
-                    <div className="absolute -top-3 left-6 rounded-full bg-primary px-3 py-0.5 text-[11px] font-semibold text-primary-foreground">
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-4 py-1 text-[11px] font-bold uppercase tracking-widest text-primary-foreground">
                       Beliebt
                     </div>
                   )}
 
-                  <div className="mb-5">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">{plan.name}</p>
-                    <p className="text-3xl font-semibold tracking-tight text-foreground">{plan.limit}
-                      <span className="text-base font-normal text-muted-foreground ml-1.5">{plan.limit !== "∞" ? "/ Monat" : ""}</span>
-                    </p>
-                    <p className="mt-1 text-sm font-medium text-foreground">{plan.price}</p>
-                    <p className="mt-2 text-[13px] text-muted-foreground leading-relaxed">{plan.desc}</p>
-                  </div>
+                  {/* Plan name + desc */}
+                  <p className="text-base font-semibold text-white mb-1">{plan.name}</p>
+                  <p className="text-[13px] text-white/50 leading-relaxed mb-5">{plan.desc}</p>
 
-                  <div className="h-px bg-border mb-5" />
+                  {/* Price block */}
+                  <p className="text-4xl font-bold tracking-tight text-white mb-0.5">
+                    {plan.limit}
+                    <span className="text-lg font-normal text-white/50 ml-1.5">{plan.limit !== "∞" ? "req/Mo." : ""}</span>
+                  </p>
+                  <p className="text-sm text-white/60 mb-6">{plan.price}</p>
 
-                  <ul className="space-y-2.5 mb-6 flex-1">
+                  {/* CTA */}
+                  <a
+                    href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}&body=${encodeURIComponent(`Hallo,\n\nich möchte den ${plan.name}-Plan für brewwater anfragen.\n\nMein Anwendungsfall: `)}`}
+                    className={`block w-full rounded-xl py-2.5 text-center text-sm font-semibold transition mb-6 ${
+                      plan.highlight
+                        ? "bg-white text-[oklch(0.22_0.04_265)] hover:bg-white/90"
+                        : "bg-white/10 text-white hover:bg-white/15"
+                    }`}
+                  >
+                    {plan.cta}
+                  </a>
+
+                  {/* Divider */}
+                  <div className="h-px bg-white/10 mb-5" />
+
+                  {/* Features */}
+                  <ul className="space-y-3 flex-1">
                     {plan.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-[13px] text-muted-foreground">
-                        <svg className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <li key={f} className="flex items-center gap-2.5 text-[13px] text-white/60">
+                        <svg className="h-3.5 w-3.5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                         {f}
                       </li>
                     ))}
                   </ul>
-
-                  <a
-                    href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}&body=${encodeURIComponent(`Hallo,\n\nich möchte den ${plan.name}-Plan für brewwater anfragen.\n\nMein Anwendungsfall: `)}`}
-                    className={`block w-full rounded-xl py-2.5 text-center text-sm font-medium transition ${
-                      plan.highlight
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                        : "border border-border bg-background text-foreground hover:bg-accent"
-                    }`}
-                  >
-                    {plan.cta}
-                  </a>
                 </div>
               ))}
             </div>
