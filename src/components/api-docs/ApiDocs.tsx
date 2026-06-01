@@ -952,6 +952,49 @@ export function ApiDocs() {
               ))}
             </div>
           </div>
+          {/* Feature comparison table */}
+          <div className="mt-12 mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
+            <div className="overflow-x-auto rounded-2xl border border-white/10">
+              <table className="w-full min-w-[560px] text-sm">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-widest text-white/40 w-1/2">Feature</th>
+                    {["Free", "Starter", "Pro", "Unlimited"].map((p) => (
+                      <th key={p} className="px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-widest text-white/40">{p}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {[
+                    { label: "Anfragen / Monat", values: ["100", "1.000", "10.000", "∞"] },
+                    { label: "pH & Gesamthärte", values: [true, true, true, true] },
+                    { label: "Calcium & Magnesium", values: [true, true, true, true] },
+                    { label: "Sulfat, Chlorid, Natrium", values: [false, true, true, true] },
+                    { label: "Hydrogencarbonat & Säurekapazität", values: [false, true, true, true] },
+                    { label: "Karbonathärte & Leitfähigkeit", values: [false, true, true, true] },
+                    { label: "Metadaten (Wasserwerk, Quelle, Konfidenz)", values: [false, true, true, true] },
+                    { label: "Support", values: ["—", "E-Mail", "Priority", "Dediziert"] },
+                  ].map((row) => (
+                    <tr key={row.label} className="hover:bg-white/[0.02]">
+                      <td className="px-5 py-3.5 text-[13px] text-white/70">{row.label}</td>
+                      {row.values.map((v, i) => (
+                        <td key={i} className="px-4 py-3.5 text-center">
+                          {v === true && (
+                            <svg className="mx-auto h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                          {v === false && <span className="text-white/20">—</span>}
+                          {typeof v === "string" && v !== "—" && <span className="text-[13px] font-medium text-white/70">{v}</span>}
+                          {v === "—" && <span className="text-white/20">—</span>}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
