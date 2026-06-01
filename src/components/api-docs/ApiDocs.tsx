@@ -818,15 +818,14 @@ export function ApiDocs() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="py-20 sm:py-28"
-          style={{ background: "radial-gradient(ellipse at 50% 0%, oklch(0.58 0.1 264) 0%, oklch(0.42 0.07 264) 60%)" }}
+        <section id="pricing" className="py-20 sm:py-28 bg-muted/60"
         >
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
             <div className="text-center mb-14">
-              <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
                 Fang kostenlos an.
               </h2>
-              <p className="mt-4 text-white/60 text-lg max-w-lg mx-auto">
+              <p className="mt-4 text-muted-foreground text-lg max-w-lg mx-auto">
                 Kein Abo, keine Kreditkarte. Einfach Key anfordern und loslegen.
               </p>
             </div>
@@ -954,17 +953,17 @@ export function ApiDocs() {
           </div>
           {/* Feature comparison table */}
           <div className="mt-12 mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
-            <div className="overflow-x-auto rounded-2xl border border-white/10">
+            <div className="overflow-x-auto rounded-2xl border border-border bg-card">
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-widest text-white/40 w-1/2">Feature</th>
+                  <tr className="border-b border-border">
+                    <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-widest text-muted-foreground w-1/2">Feature</th>
                     {["Free", "Starter", "Pro", "Unlimited"].map((p) => (
-                      <th key={p} className="px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-widest text-white/40">{p}</th>
+                      <th key={p} className="px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{p}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-border">
                   {[
                     { label: "Anfragen / Monat", values: ["100", "1.000", "10.000", "∞"] },
                     { label: "pH & Gesamthärte", values: [true, true, true, true] },
@@ -975,8 +974,8 @@ export function ApiDocs() {
                     { label: "Metadaten (Wasserwerk, Quelle, Konfidenz)", values: [false, true, true, true] },
                     { label: "Support", values: ["—", "E-Mail", "Priority", "Dediziert"] },
                   ].map((row) => (
-                    <tr key={row.label} className="hover:bg-white/[0.02]">
-                      <td className="px-5 py-3.5 text-[13px] text-white/70">{row.label}</td>
+                    <tr key={row.label} className="hover:bg-muted/40">
+                      <td className="px-5 py-3.5 text-[13px] text-foreground">{row.label}</td>
                       {row.values.map((v, i) => (
                         <td key={i} className="px-4 py-3.5 text-center">
                           {v === true && (
@@ -984,9 +983,9 @@ export function ApiDocs() {
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                           )}
-                          {v === false && <span className="text-white/20">—</span>}
-                          {typeof v === "string" && v !== "—" && <span className="text-[13px] font-medium text-white/70">{v}</span>}
-                          {v === "—" && <span className="text-white/20">—</span>}
+                          {v === false && <span className="text-muted-foreground/40">—</span>}
+                          {typeof v === "string" && v !== "—" && <span className="text-[13px] font-medium text-foreground">{v}</span>}
+                          {v === "—" && <span className="text-muted-foreground/40">—</span>}
                         </td>
                       ))}
                     </tr>
