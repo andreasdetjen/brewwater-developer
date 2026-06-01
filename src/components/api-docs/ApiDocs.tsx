@@ -365,7 +365,7 @@ const TEST_KEY = "bw_live_test1234567890abcdef1234567890ab";
 const DEMO_CITIES = [
   { label: "Hamburg", plz: "20095" },
   { label: "Berlin", plz: "10115" },
-  { label: "Köln", plz: "50667" },
+  { label: "Düsseldorf", plz: "40210" },
   { label: "Stuttgart", plz: "70173" },
 ];
 
