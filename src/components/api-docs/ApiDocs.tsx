@@ -819,7 +819,7 @@ export function ApiDocs() {
 
         {/* Pricing */}
         <section id="pricing" className="py-20 sm:py-28">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-10">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
             <div className="text-center mb-16">
               <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -833,7 +833,7 @@ export function ApiDocs() {
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   name: "Free",
@@ -874,7 +874,7 @@ export function ApiDocs() {
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col rounded-2xl p-6 ${
+                  className={`relative flex flex-col rounded-2xl p-8 ${
                     plan.highlight
                       ? "bg-[oklch(0.22_0.04_265)] text-white ring-2 ring-primary"
                       : "bg-[oklch(0.18_0.02_265)] text-white"
@@ -887,36 +887,36 @@ export function ApiDocs() {
                   )}
 
                   {/* Plan name + desc */}
-                  <p className="text-base font-semibold text-white mb-1">{plan.name}</p>
-                  <p className="text-[13px] text-white/50 leading-relaxed mb-5">{plan.desc}</p>
+                  <p className="text-lg font-semibold text-white mb-2">{plan.name}</p>
+                  <p className="text-[14px] text-white/50 leading-relaxed mb-8">{plan.desc}</p>
 
                   {/* Price block */}
-                  <p className="text-4xl font-bold tracking-tight text-white mb-0.5">
+                  <p className="text-5xl font-bold tracking-tight text-white mb-1">
                     {plan.limit}
-                    <span className="text-lg font-normal text-white/50 ml-1.5">{plan.limit !== "∞" ? "req/Mo." : ""}</span>
+                    <span className="text-xl font-normal text-white/40 ml-2">{plan.limit !== "∞" ? "req/Mo." : ""}</span>
                   </p>
-                  <p className="text-sm text-white/60 mb-6">{plan.price}</p>
+                  <p className="text-sm text-white/50 mb-8">{plan.price}</p>
 
                   {/* CTA */}
                   <a
                     href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}&body=${encodeURIComponent(`Hallo,\n\nich möchte den ${plan.name}-Plan für brewwater anfragen.\n\nMein Anwendungsfall: `)}`}
-                    className={`block w-full rounded-xl py-2.5 text-center text-sm font-semibold transition mb-6 ${
+                    className={`block w-full rounded-xl py-3 text-center text-sm font-semibold transition mb-8 ${
                       plan.highlight
                         ? "bg-white text-[oklch(0.22_0.04_265)] hover:bg-white/90"
-                        : "bg-white/10 text-white hover:bg-white/15"
+                        : "bg-white/10 text-white hover:bg-white/20"
                     }`}
                   >
                     {plan.cta}
                   </a>
 
                   {/* Divider */}
-                  <div className="h-px bg-white/10 mb-5" />
+                  <div className="h-px bg-white/10 mb-6" />
 
                   {/* Features */}
-                  <ul className="space-y-3 flex-1">
+                  <ul className="space-y-4 flex-1">
                     {plan.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2.5 text-[13px] text-white/60">
-                        <svg className="h-3.5 w-3.5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <li key={f} className="flex items-center gap-3 text-[14px] text-white/60">
+                        <svg className="h-4 w-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                         {f}
