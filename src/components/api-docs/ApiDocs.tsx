@@ -818,8 +818,8 @@ export function ApiDocs() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="py-20 sm:py-28">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
+        <section id="pricing" className="py-20 sm:py-28 border-t border-border">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-10">
             <div className="text-center mb-16">
               <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -828,121 +828,79 @@ export function ApiDocs() {
               <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
                 Fang kostenlos an.
               </h2>
-              <p className="mt-5 text-muted-foreground text-lg max-w-xl mx-auto leading-relaxed">
-                Kein Abo, keine Kreditkarte für den Start.<br className="hidden sm:block" />
-                Einfach Key anfordern und loslegen.
+              <p className="mt-5 text-muted-foreground text-lg max-w-lg mx-auto leading-relaxed">
+                Kein Abo, keine Kreditkarte. Einfach Key anfordern und loslegen.
               </p>
             </div>
 
-            {/* Cards */}
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:items-end">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   name: "Free",
-                  price: "0 €",
-                  period: "für immer",
                   limit: "100",
-                  unit: "Anfragen / Monat",
+                  price: "Kostenlos",
+                  desc: "Zum Ausprobieren und für kleine Projekte.",
                   highlight: false,
-                  features: [
-                    "Alle Felder enthalten",
-                    "Alle Städte & PLZ",
-                    "X-API-Key Auth",
-                    "Rate-Limit-Header",
-                  ],
-                  cta: "Kostenlos starten",
+                  features: ["100 Anfragen / Monat", "Alle Felder & Städte", "API Key per E-Mail"],
+                  cta: "Jetzt starten",
                 },
                 {
                   name: "Starter",
-                  price: "auf Anfrage",
-                  period: "",
                   limit: "1.000",
-                  unit: "Anfragen / Monat",
+                  price: "Auf Anfrage",
+                  desc: "Für Apps und erste produktive Integrationen.",
                   highlight: false,
-                  features: [
-                    "Alle Felder enthalten",
-                    "Alle Städte & PLZ",
-                    "X-API-Key Auth",
-                    "E-Mail Support",
-                  ],
+                  features: ["1.000 Anfragen / Monat", "Alle Felder & Städte", "E-Mail Support"],
                   cta: "Anfragen",
                 },
                 {
                   name: "Pro",
-                  price: "auf Anfrage",
-                  period: "",
                   limit: "10.000",
-                  unit: "Anfragen / Monat",
+                  price: "Auf Anfrage",
+                  desc: "Für Röstereien, SaaS-Produkte und Agenturen.",
                   highlight: true,
-                  features: [
-                    "Alle Felder enthalten",
-                    "Alle Städte & PLZ",
-                    "X-API-Key Auth",
-                    "Priority Support",
-                  ],
+                  features: ["10.000 Anfragen / Monat", "Alle Felder & Städte", "Priority Support"],
                   cta: "Anfragen",
                 },
                 {
                   name: "Unlimited",
-                  price: "auf Anfrage",
-                  period: "",
                   limit: "∞",
-                  unit: "unbegrenzt",
+                  price: "Auf Anfrage",
+                  desc: "Keine Limits. Für intensive oder kommerzielle Nutzung.",
                   highlight: false,
-                  features: [
-                    "Alle Felder enthalten",
-                    "Alle Städte & PLZ",
-                    "X-API-Key Auth",
-                    "Dedizierter Support",
-                  ],
+                  features: ["Unbegrenzte Anfragen", "Alle Felder & Städte", "Dedizierter Support"],
                   cta: "Anfragen",
                 },
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col rounded-3xl p-8 ${
+                  className={`relative flex flex-col rounded-2xl border p-6 ${
                     plan.highlight
-                      ? "bg-foreground text-background shadow-2xl shadow-foreground/20 lg:-mt-4 lg:pb-12"
-                      : "bg-card border border-border"
+                      ? "border-primary/40 bg-primary/5 ring-1 ring-primary/20"
+                      : "border-border bg-card"
                   }`}
                 >
                   {plan.highlight && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-[11px] font-semibold text-primary-foreground tracking-wide">
+                    <div className="absolute -top-3 left-6 rounded-full bg-primary px-3 py-0.5 text-[11px] font-semibold text-primary-foreground">
                       Beliebt
                     </div>
                   )}
 
-                  {/* Plan name */}
-                  <div className={`text-[11px] font-semibold uppercase tracking-[0.18em] mb-4 ${plan.highlight ? "text-background/50" : "text-muted-foreground"}`}>
-                    {plan.name}
+                  <div className="mb-5">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">{plan.name}</p>
+                    <p className="text-3xl font-semibold tracking-tight text-foreground">{plan.limit}
+                      <span className="text-base font-normal text-muted-foreground ml-1.5">{plan.limit !== "∞" ? "/ Monat" : ""}</span>
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-foreground">{plan.price}</p>
+                    <p className="mt-2 text-[13px] text-muted-foreground leading-relaxed">{plan.desc}</p>
                   </div>
 
-                  {/* Limit — the hero number */}
-                  <div className={`font-mono text-5xl font-semibold tracking-tight leading-none mb-1 ${plan.highlight ? "text-background" : "text-foreground"}`}>
-                    {plan.limit}
-                  </div>
-                  <div className={`text-sm mb-6 ${plan.highlight ? "text-background/60" : "text-muted-foreground"}`}>
-                    {plan.unit}
-                  </div>
+                  <div className="h-px bg-border mb-5" />
 
-                  {/* Price */}
-                  <div className={`text-xl font-semibold mb-1 ${plan.highlight ? "text-background" : "text-foreground"}`}>
-                    {plan.price}
-                  </div>
-                  {plan.period && (
-                    <div className={`text-xs mb-6 ${plan.highlight ? "text-background/50" : "text-muted-foreground"}`}>
-                      {plan.period}
-                    </div>
-                  )}
-
-                  {/* Divider */}
-                  <div className={`my-6 h-px ${plan.highlight ? "bg-background/10" : "bg-border"}`} />
-
-                  {/* Features */}
-                  <ul className="space-y-3 mb-8 flex-1">
+                  <ul className="space-y-2.5 mb-6 flex-1">
                     {plan.features.map((f) => (
-                      <li key={f} className={`flex items-center gap-2.5 text-[13px] leading-snug ${plan.highlight ? "text-background/80" : "text-muted-foreground"}`}>
-                        <svg className={`h-3.5 w-3.5 shrink-0 ${plan.highlight ? "text-background/60" : "text-primary"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <li key={f} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                        <svg className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                         {f}
@@ -950,13 +908,12 @@ export function ApiDocs() {
                     ))}
                   </ul>
 
-                  {/* CTA */}
                   <a
                     href={`mailto:api@brewwater.de?subject=${encodeURIComponent(`API Key Anfrage — ${plan.name}`)}&body=${encodeURIComponent(`Hallo,\n\nich möchte den ${plan.name}-Plan für brewwater anfragen.\n\nMein Anwendungsfall: `)}`}
-                    className={`block w-full rounded-2xl py-3 text-center text-sm font-semibold transition ${
+                    className={`block w-full rounded-xl py-2.5 text-center text-sm font-medium transition ${
                       plan.highlight
-                        ? "bg-background text-foreground hover:bg-background/90"
-                        : "bg-foreground text-background hover:bg-foreground/85"
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "border border-border bg-background text-foreground hover:bg-accent"
                     }`}
                   >
                     {plan.cta}
