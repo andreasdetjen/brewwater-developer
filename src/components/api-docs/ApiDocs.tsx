@@ -360,6 +360,213 @@ function FaqList() {
   );
 }
 
+const TEST_KEY = "bw_live_test1234567890abcdef1234567890ab";
+
+type ApiResult = {
+  status: number;
+  ms: number;
+  data: Record<string, unknown>;
+} | null;
+
+function LivePlayground() {
+  const [plz, setPlz] = useState("20095");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<ApiResult>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchWater(e: React.FormEvent) {
+    e.preventDefault();
+    if (!/^\d{5}$/.test(plz.trim())) {
+      setError("Bitte eine gültige 5-stellige PLZ eingeben.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    const start = Date.now();
+    try {
+      const res = await fetch(
+        `https://api.brewwater.de/v1/water?plz=${plz.trim()}`,
+        { headers: { "X-API-Key": TEST_KEY } },
+      );
+      const ms = Date.now() - start;
+      const data = await res.json();
+      setResult({ status: res.status, ms, data });
+    } catch {
+      setError("Verbindung fehlgeschlagen. Bitte erneut versuchen.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const values = result?.data?.values as Record<string, unknown> | undefined;
+
+  return (
+    <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32 lg:px-10">
+      <div className="text-center mb-12">
+        <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-5">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          Live Playground
+        </div>
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          Echte Daten — PLZ eingeben, fertig.
+        </h2>
+        <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
+          Gib eine deutsche PLZ ein und sieh die echten Wasserwerte direkt aus der API.
+        </p>
+      </div>
+
+      {/* Browser frame */}
+      <div className="rounded-2xl border border-border bg-card shadow-2xl overflow-hidden">
+        {/* Browser chrome */}
+        <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-3">
+          <div className="flex gap-1.5">
+            <div className="h-3 w-3 rounded-full bg-red-400" />
+            <div className="h-3 w-3 rounded-full bg-yellow-400" />
+            <div className="h-3 w-3 rounded-full bg-green-400" />
+          </div>
+          <form onSubmit={fetchWater} className="flex flex-1 items-center gap-2 mx-4">
+            <div className="flex flex-1 items-center gap-2 rounded-md bg-background border border-border px-3 py-1 font-mono text-xs text-muted-foreground">
+              <span className="shrink-0">api.brewwater.de/v1/water?plz=</span>
+              <input
+                value={plz}
+                onChange={(e) => setPlz(e.target.value)}
+                maxLength={5}
+                className="w-14 bg-transparent text-foreground outline-none font-mono"
+                placeholder="20095"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="shrink-0 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
+            >
+              {loading ? "..." : "Anfragen"}
+            </button>
+          </form>
+          {result && (
+            <div className="flex items-center gap-1 shrink-0">
+              <div className={`h-2 w-2 rounded-full ${result.status === 200 ? "bg-emerald-400" : "bg-red-400"}`} />
+              <span className="text-[10px] text-muted-foreground">{result.status} · {result.ms}ms</span>
+            </div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border min-h-[400px]">
+          {/* Left: JSON response */}
+          <div className="bg-[#1e1e2e] p-6 overflow-auto">
+            <div className="text-[10px] font-semibold uppercase tracking-widest text-white/30 mb-3">JSON Response</div>
+            {!result && !loading && !error && (
+              <div className="text-white/30 text-sm font-mono">
+                {`// PLZ eingeben und "Anfragen" klicken`}
+              </div>
+            )}
+            {loading && (
+              <div className="flex items-center gap-2 text-white/40 text-sm">
+                <div className="h-3 w-3 rounded-full border-2 border-white/20 border-t-white/60 animate-spin" />
+                Anfrage läuft...
+              </div>
+            )}
+            {error && <div className="text-red-400 text-sm font-mono">{`// Fehler: ${error}`}</div>}
+            {result && (
+              <pre className="text-[12px] leading-relaxed text-emerald-300 font-mono overflow-x-auto whitespace-pre-wrap">
+                {JSON.stringify(result.data, null, 2)}
+              </pre>
+            )}
+          </div>
+
+          {/* Right: Visual summary */}
+          <div className="bg-white p-8">
+            {!result && !loading && (
+              <div className="flex h-full items-center justify-center text-sm text-slate-400">
+                Ergebnis erscheint hier
+              </div>
+            )}
+            {loading && (
+              <div className="flex h-full items-center justify-center">
+                <div className="h-8 w-8 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+              </div>
+            )}
+            {result && result.status === 200 && values && (
+              <div>
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground">
+                      {result.data.city as string}
+                    </h3>
+                    <p className="text-[12px] text-slate-400 mt-1">
+                      {result.data.waterworks as string} · PLZ {result.data.plz as string}
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-600 border border-emerald-100">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    {result.data.data_date as string}
+                  </span>
+                </div>
+
+                {/* Key stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                  {[
+                    { label: "Gesamthärte", value: values.total_hardness_dH, unit: "°dH" },
+                    { label: "pH-Wert", value: values.ph, unit: "" },
+                    { label: "Calcium", value: values.calcium_mgL, unit: "mg/L" },
+                    { label: "Magnesium", value: values.magnesium_mgL, unit: "mg/L" },
+                  ].map((s) => (
+                    <div key={s.label} className="rounded-xl border border-border bg-[#f8f9fa] px-3 py-3">
+                      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">{s.label}</div>
+                      <div className="text-xl font-semibold text-foreground tracking-tight">
+                        {s.value != null ? String(s.value) : "—"}
+                        <span className="text-xs font-normal text-slate-400 ml-1">{s.unit}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* All values */}
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-3">Alle Werte</div>
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                    {[
+                      { l: "Karbonathärte", v: values.carbonate_hardness_dH, u: "°dH" },
+                      { l: "Säurekapazität", v: values.acid_capacity_KS43_mmolL, u: "mmol/L" },
+                      { l: "Natrium", v: values.sodium_mgL, u: "mg/L" },
+                      { l: "Chlorid", v: values.chloride_mgL, u: "mg/L" },
+                      { l: "Sulfat", v: values.sulfate_mgL, u: "mg/L" },
+                      { l: "Hydrogencarbonat", v: values.hydrogencarbonate_mgL, u: "mg/L" },
+                      { l: "Leitfähigkeit", v: values.conductivity_uScm, u: "µS/cm" },
+                    ].map((item) => (
+                      <div key={item.l} className="flex flex-col">
+                        <div className="text-[11px] text-slate-400">{item.l}</div>
+                        <div className="text-[13px] font-medium text-foreground mt-0.5">
+                          {item.v != null ? `${item.v} ${item.u}` : "—"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            {result && result.status !== 200 && (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center">
+                  <div className="text-4xl mb-3">⚠️</div>
+                  <div className="text-sm font-medium text-foreground">
+                    {(result.data.error as string) ?? "Fehler"}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {(result.data.message as string) ?? ""}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ApiDocs() {
   const [loginOpen, setLoginOpen] = useState(false);
   const loginRef = useRef<HTMLDivElement>(null);
@@ -447,11 +654,15 @@ export function ApiDocs() {
               die über Extraktion und Geschmack entscheiden — für Espresso, Filterkaffee und Cold Brew.
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              <Button size="lg" className="h-12 gap-2 rounded-full px-6 text-base">
-                <Key className="h-4 w-4" /> API Key anfordern
+              <Button size="lg" className="h-12 gap-2 rounded-full px-6 text-base" asChild>
+                <a href="mailto:api@brewwater.de?subject=API Key Anfrage&body=Hallo,%0A%0Aich möchte einen API Key für brewwater anfragen.%0A%0AMein Anwendungsfall: ">
+                  <Key className="h-4 w-4" /> API Key anfordern
+                </a>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 gap-2 rounded-full border-foreground/15 px-6 text-base">
-                Dokumentation lesen <ArrowRight className="h-4 w-4" />
+              <Button size="lg" variant="outline" className="h-12 gap-2 rounded-full border-foreground/15 px-6 text-base" asChild>
+                <a href="#getting-started">
+                  Dokumentation lesen <ArrowRight className="h-4 w-4" />
+                </a>
               </Button>
             </div>
           </div>
@@ -459,128 +670,8 @@ export function ApiDocs() {
           <HeroIllustration />
         </section>
 
-        {/* Browser Mockup — Code Playground */}
-        <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32 lg:px-10">
-          <div className="text-center mb-12">
-            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-5">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              Live Playground
-            </div>
-            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Eine Anfrage — alle Kaffeewasser-Parameter.
-            </h2>
-            <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
-              pH, Restalkalität, Härte, Mineralien — alles was zählt, als JSON. Kein SDK, keine Konfiguration.
-            </p>
-          </div>
-
-          {/* Browser frame */}
-          <div className="rounded-2xl border border-border bg-card shadow-2xl overflow-hidden">
-            {/* Browser chrome */}
-            <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-3">
-              <div className="flex gap-1.5">
-                <div className="h-3 w-3 rounded-full bg-red-400" />
-                <div className="h-3 w-3 rounded-full bg-yellow-400" />
-                <div className="h-3 w-3 rounded-full bg-green-400" />
-              </div>
-              <div className="flex-1 mx-4">
-                <div className="rounded-md bg-background border border-border px-3 py-1 text-xs text-muted-foreground font-mono">
-                  api.brewwater.de/v1/water?plz=20097
-                </div>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="h-2 w-2 rounded-full bg-emerald-400" />
-                <span className="text-[10px] text-muted-foreground">200 OK · 14ms</span>
-              </div>
-            </div>
-
-            {/* Dashboard Mockup */}
-            <div className="grid lg:grid-cols-[260px_1fr] divide-y lg:divide-y-0 lg:divide-x divide-border bg-white min-h-[540px]">
-              {/* Sidebar */}
-              <div className="bg-[#f8f9fa] p-5 overflow-hidden">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 px-2 mb-4">Hamburg · 5 Werke</div>
-                <div className="space-y-1.5">
-                  {[
-                    { name: "Baursberg", sub: "Wasserwerk", plz: "5 PLZ", active: false },
-                    { name: "Billbrook", sub: "Wasserwerk", plz: "8 PLZ", active: false },
-                    { name: "Langenhorn", sub: "Wasserwerk", plz: "1 PLZ", active: false },
-                    { name: "Rothenburgsort", sub: "Wasserwerk", plz: "20 PLZ", active: true },
-                    { name: "Stellingen", sub: "Wasserwerk", plz: "6 PLZ", active: false },
-                  ].map((item) => (
-                    <div
-                      key={item.name}
-                      className={`rounded-xl px-3 py-3 ${item.active ? "bg-white shadow-sm border border-border" : "hover:bg-white/60"}`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className={`text-[13px] font-medium ${item.active ? "text-foreground" : "text-slate-500"}`}>{item.name}</span>
-                        {item.plz && <span className="text-[11px] text-slate-400">{item.plz}</span>}
-                      </div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">{item.sub}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Main content */}
-              <div className="bg-white p-8">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-8">
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground">Rothenburgsort</h3>
-                    <p className="text-[12px] text-slate-400 mt-1">HAMBURG WASSER · Wasserwerk</p>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-600 border border-emerald-100">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    Aktuell
-                  </span>
-                </div>
-
-                {/* Stat cards */}
-                <div className="grid grid-cols-4 gap-3 mb-8">
-                  {[
-                    { label: "Gesamthärte", value: "8.7", unit: "°dH" },
-                    { label: "pH-Wert", value: "7.6", unit: "" },
-                    { label: "Calcium", value: "50", unit: "mg/L" },
-                    { label: "Datenstand", value: "2025", unit: "" },
-                  ].map((s) => (
-                    <div key={s.label} className="rounded-xl border border-border bg-[#f8f9fa] px-4 py-4">
-                      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-2">{s.label}</div>
-                      <div className="text-2xl font-semibold text-foreground tracking-tight">
-                        {s.value}<span className="text-sm font-normal text-slate-400 ml-1">{s.unit}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Values grid */}
-                <div>
-                  <div className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-4">Alle Wasserwerte</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-5">
-                    {[
-                      { l: "Gesamthärte", v: "8.7 °dH" },
-                      { l: "Karbonathärte", v: "5.4 °dH" },
-                      { l: "Säurekapazität", v: "1.93 mmol/L" },
-                      { l: "Calcium", v: "50 mg/L" },
-                      { l: "Magnesium", v: "6 mg/L" },
-                      { l: "Natrium", v: "18 mg/L" },
-                      { l: "Chlorid", v: "32 mg/L" },
-                      { l: "Sulfat", v: "44 mg/L" },
-                      { l: "Nitrat", v: "3.1 mg/L" },
-                      { l: "Hydrogencarbonat", v: "119 mg/L" },
-                      { l: "Restalkalität", v: "2.6 °dH" },
-                      { l: "pH-Wert", v: "7.6" },
-                    ].map((item) => (
-                      <div key={item.l} className="flex flex-col">
-                        <div className="text-[11px] text-slate-400">{item.l}</div>
-                        <div className="text-[14px] font-medium text-foreground mt-0.5">{item.v}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Live Playground */}
+        <LivePlayground />
 
         {/* Stats strip */}
         <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32">
