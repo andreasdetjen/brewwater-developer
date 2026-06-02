@@ -1198,7 +1198,7 @@ X-Request-Id: 3f2a1b4c-...`}
           {/* Questions CTA */}
           <div className="py-20 sm:py-28">
             <div
-              className="relative overflow-hidden rounded-[2rem] px-8 py-16 text-center sm:px-16 sm:py-20"
+              className="relative overflow-hidden rounded-[2rem] px-8 py-10 text-center sm:px-16 sm:py-12"
               style={{
                 background:
                   "radial-gradient(120% 80% at 50% 0%, oklch(0.62 0.28 264) 0%, oklch(0.4 0.3 264) 100%)",
