@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Droplet,
-  Github,
+
   Key,
   ArrowRight,
   Check,
@@ -744,9 +744,7 @@ export function ApiDocs() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="hidden gap-1.5 sm:inline-flex">
-              <Github className="h-4 w-4" /> GitHub
-            </Button>
+
             <div className="relative">
               <Button
                 ref={loginBtnRef}
@@ -1203,7 +1201,6 @@ X-Request-Id: 3f2a1b4c-...`}
                   {[
                     { label: "Changelog", href: "/changelog" },
                     { label: "Status", href: "#" },
-                    { label: "GitHub", href: "https://github.com/andreasdetjen/brewwater-developer" },
                     { label: "brewwater.de", href: "https://brewwater.de" },
                   ].map((l) => (
                     <li key={l.label}><a href={l.href} className="hover:text-white transition-colors">{l.label}</a></li>
