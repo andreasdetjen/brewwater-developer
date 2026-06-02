@@ -167,7 +167,7 @@ function Tabs({ tabs }: { tabs: { label: string; code: string }[] }) {
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-32 py-20 sm:py-28 reveal">
-      <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
+      <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16 lg:items-start">
         <div className="min-w-0">
           {eyebrow && (
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
@@ -904,7 +904,7 @@ export function ApiDocs() {
         {/* Pricing */}
         <section id="pricing" className="scroll-mt-32 py-20 sm:py-28">
           <div className="mx-auto max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 lg:pl-10 lg:pr-10">
-            <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
+            <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16 lg:items-start">
               <div className="min-w-0">
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
                   Preise
