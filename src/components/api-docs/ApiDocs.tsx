@@ -128,7 +128,7 @@ function CodeBlock({ code }: { code: string }) {
         {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
         {copied ? "Copied" : "Copy"}
       </button>
-      <pre className="overflow-x-auto p-5 text-[13px] leading-relaxed text-[var(--code-fg)] font-mono">
+      <pre className="overflow-x-auto no-scrollbar p-5 text-[13px] leading-relaxed text-[var(--code-fg)] font-mono">
         <code>{code}</code>
       </pre>
     </div>
@@ -644,7 +644,7 @@ function LivePlayground() {
             {result && (
               <pre
                 key={resultKey}
-                className="text-[12px] leading-relaxed font-mono overflow-x-auto whitespace-pre-wrap"
+                className="text-[12px] leading-relaxed font-mono overflow-x-auto no-scrollbar whitespace-pre-wrap"
                 style={{ animation: "fadeIn 0.3s ease" }}
               >
                 {JSON.stringify(result.data, null, 2)
@@ -1006,7 +1006,7 @@ export function ApiDocs() {
                 ))}
               </div>
               {/* Desktop */}
-              <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
+              <div className="hidden sm:block overflow-x-auto no-scrollbar rounded-2xl border border-border">
                 <table className="w-full min-w-[520px] text-sm">
                   <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <tr>
@@ -1062,7 +1062,7 @@ export function ApiDocs() {
               ))}
             </div>
             {/* Desktop */}
-            <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
+            <div className="hidden sm:block overflow-x-auto no-scrollbar rounded-2xl border border-border">
               <table className="w-full min-w-[520px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
@@ -1103,7 +1103,7 @@ export function ApiDocs() {
               ))}
             </div>
             {/* Desktop */}
-            <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
+            <div className="hidden sm:block overflow-x-auto no-scrollbar rounded-2xl border border-border">
               <table className="w-full min-w-[420px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
@@ -1151,7 +1151,7 @@ X-Request-Id: 3f2a1b4c-...`}
               ))}
             </div>
             {/* Desktop */}
-            <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
+            <div className="hidden sm:block overflow-x-auto no-scrollbar rounded-2xl border border-border">
               <table className="w-full text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
