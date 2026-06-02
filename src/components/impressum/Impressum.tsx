@@ -6,7 +6,7 @@ function Nav() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 pl-4 pr-4 sm:pl-6 sm:pr-6">
         <a href="/" className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <Droplet className="h-4 w-4" />
@@ -55,7 +55,7 @@ export function Impressum() {
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
 
-      <main className="mx-auto max-w-2xl px-6 py-20 sm:py-28">
+      <main className="mx-auto max-w-2xl pl-6 pr-6 py-20 sm:py-28">
 
         {/* Title */}
         <h1 className="text-5xl font-semibold tracking-tight text-primary text-center mb-16 sm:text-6xl">
@@ -156,7 +156,7 @@ export function Impressum() {
       </main>
 
       <footer className="border-t border-border">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+        <div className="mx-auto max-w-5xl pl-4 pr-4 sm:pl-6 sm:pr-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} brewwater. Alle Rechte vorbehalten.</span>
           <div className="flex gap-5">
             <a href="/impressum" className="text-foreground font-medium">Impressum</a>

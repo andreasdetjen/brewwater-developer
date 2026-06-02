@@ -165,7 +165,7 @@ function Section({ id, eyebrow, title, children }: { id: string; eyebrow?: strin
   return (
     <section id={id} className="scroll-mt-32 py-20 sm:py-28 reveal">
       <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
-        <div>
+        <div className="min-w-0">
           {eyebrow && (
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               {eyebrow}
@@ -175,7 +175,7 @@ function Section({ id, eyebrow, title, children }: { id: string; eyebrow?: strin
             {title}
           </h2>
         </div>
-        <div className="space-y-7 text-[16px] leading-relaxed text-muted-foreground max-w-2xl">
+        <div className="min-w-0 space-y-7 text-[16px] leading-relaxed text-muted-foreground max-w-2xl">
           {children}
         </div>
       </div>
@@ -543,7 +543,7 @@ function LivePlayground() {
   const values = result?.data?.values as Record<string, unknown> | undefined;
 
   return (
-    <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32 lg:px-10">
+    <section className="mx-auto mt-24 max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 sm:mt-32 lg:pl-10 lg:pr-10">
       <div className="text-center mb-12">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-5">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -744,10 +744,10 @@ export function ApiDocs() {
 
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Top Nav */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 pl-4 pr-4 sm:pl-6 sm:pr-6 lg:pl-10 lg:pr-10">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <Droplet className="h-4 w-4" />
@@ -786,7 +786,7 @@ export function ApiDocs() {
       <main>
         {/* Hero */}
         <section className="relative overflow-hidden">
-          <div className="mx-auto max-w-6xl px-4 pb-4 pt-20 text-center sm:px-6 sm:pt-32 lg:pt-40">
+          <div className="mx-auto max-w-6xl pl-4 pr-4 pb-4 pt-20 text-center sm:pl-6 sm:pr-6 sm:pt-32 lg:pt-40">
             <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               REST API · JSON · Kaffeewasser für 50+ Städte
@@ -820,7 +820,7 @@ export function ApiDocs() {
         <LivePlayground />
 
         {/* Stats strip */}
-        <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32">
+        <section className="mx-auto mt-24 max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 sm:mt-32">
           <div className="grid grid-cols-2 gap-y-8 border-y border-border py-10 sm:grid-cols-4">
             <StatCard num={50} suffix="+" label="deutsche Städte" />
             <StatCard num={99.98} suffix="%" label="Uptime SLA" />
@@ -831,9 +831,9 @@ export function ApiDocs() {
 
         {/* Pricing */}
         <section id="pricing" className="scroll-mt-32 py-20 sm:py-28">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
+          <div className="mx-auto max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 lg:pl-10 lg:pr-10">
             <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
-              <div>
+              <div className="min-w-0">
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
                   Preise
                 </div>
@@ -845,7 +845,7 @@ export function ApiDocs() {
                 </p>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:items-stretch">
+              <div className="min-w-0 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:items-stretch">
                 {[
                   {
                     name: "Free",
@@ -946,7 +946,7 @@ export function ApiDocs() {
           </div>
         </section>
 
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
+        <div className="mx-auto max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 lg:pl-10 lg:pr-10">
           <Section id="getting-started" eyebrow="01" title="Getting Started">
             <p>
               In unter einer Minute zur ersten Antwort mit echten Kaffeewasser-Werten. API-Key anlegen,
@@ -1229,7 +1229,7 @@ X-Request-Id: 3f2a1b4c-...`}
           className="mt-0 overflow-hidden"
         >
           {/* Main footer links */}
-          <div className="mx-auto max-w-6xl px-6 pt-16 pb-10 lg:px-10">
+          <div className="mx-auto max-w-6xl pl-6 pr-6 pt-16 pb-10 lg:pl-10 lg:pr-10">
             <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
               {/* Logo */}
               <div className="col-span-2 sm:col-span-1">
