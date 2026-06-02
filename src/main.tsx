@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { ApiDocs } from "@/components/api-docs/ApiDocs";
 import { Changelog } from "@/components/changelog/Changelog";
+import { Impressum } from "@/components/impressum/Impressum";
 import { LoginModal } from "@/components/login/LoginModal";
 import "./styles.css";
 
@@ -18,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ApiDocs />} />
         <Route path="/changelog" element={<Changelog />} />
-        <Route path="/impressum" element={<Redirect to="https://brewwater.de/impressum" />} />
+        <Route path="/impressum" element={<Impressum />} />
         <Route path="/datenschutz" element={<Redirect to="https://brewwater.de/datenschutz" />} />
         <Route
           path="/login"
