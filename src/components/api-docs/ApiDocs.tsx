@@ -860,7 +860,7 @@ export function ApiDocs() {
                   },
                   {
                     name: "Starter",
-                    price: "29 €",
+                    price: "9 €",
                     priceSub: "pro Monat",
                     limit: "1.000",
                     desc: "Erste Integrationen.",
@@ -874,7 +874,7 @@ export function ApiDocs() {
                   },
                   {
                     name: "Pro",
-                    price: "99 €",
+                    price: "29 €",
                     priceSub: "pro Monat",
                     limit: "10.000",
                     desc: "Für Röstereien & Apps.",
