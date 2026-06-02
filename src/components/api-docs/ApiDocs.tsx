@@ -11,6 +11,9 @@ import {
   Globe2,
   Activity,
   MessageCircle,
+  ChevronDown,
+  Lock,
+  Hash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -753,6 +756,42 @@ function SchemaRow({ s }: { s: { f: string; t: string; d: string } }) {
   );
 }
 
+function CollapsibleResponse({ code }: { code: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-2xl border border-border bg-card overflow-hidden">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between px-5 py-3.5 text-left transition hover:bg-muted/40"
+      >
+        <div className="flex items-center gap-2">
+          <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">200 OK</span>
+          <span className="text-sm font-medium text-foreground">Example response</span>
+          <span className="text-xs text-muted-foreground">application/json</span>
+        </div>
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+      </button>
+      <div className={`grid transition-all duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+        <div className="overflow-hidden">
+          <div className="border-t border-border">
+            <CodeBlock code={code} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function errorBadgeClasses(code: string): string {
+  const base = "inline-flex items-center justify-center rounded-md px-2 py-0.5 font-mono text-xs font-bold tabular-nums";
+  if (code.startsWith("5")) return `${base} bg-red-500/10 text-red-600`;
+  if (code === "401" || code === "403") return `${base} bg-red-500/10 text-red-600`;
+  if (code === "429") return `${base} bg-amber-500/15 text-amber-700`;
+  if (code === "400" || code === "422") return `${base} bg-orange-500/10 text-orange-600`;
+  if (code === "404") return `${base} bg-muted text-muted-foreground`;
+  return `${base} bg-muted text-foreground`;
+}
+
 const ALL_SCHEMA = [...SCHEMA_META, ...SCHEMA_VALUES];
 const SCHEMA_DEFAULT_COUNT = 5;
 
@@ -776,9 +815,10 @@ function SchemaSection() {
         ))}
         <button
           onClick={() => setExpanded(v => !v)}
-          className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-4 py-3 text-[13px] font-medium text-muted-foreground hover:text-foreground transition mt-1"
+          className="group w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-[13px] font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition mt-1"
         >
-          {expanded ? "Ausblenden ↑" : `${hidden} weitere Felder anzeigen ↓`}
+          <span>{expanded ? "Weniger anzeigen" : `${hidden} weitere Felder`}</span>
+          <ChevronDown className={`h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5 ${expanded ? "rotate-180" : ""}`} />
         </button>
       </div>
 
@@ -798,16 +838,16 @@ function SchemaSection() {
               <td colSpan={3} className="px-0 py-0">
                 <button
                   onClick={() => setExpanded(v => !v)}
-                  className="w-full flex items-center justify-center gap-1.5 px-4 py-3 text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition"
+                  className="group w-full flex items-center justify-center gap-2 px-4 py-3 text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition"
                 >
-                  {expanded ? "Ausblenden ↑" : `${hidden} weitere Felder anzeigen ↓`}
+                  <span>{expanded ? "Weniger anzeigen" : `${hidden} weitere Felder`}</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5 ${expanded ? "rotate-180" : ""}`} />
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p className="text-[14px] text-muted-foreground">Flaches JSON-Objekt — alle Werte direkt verwendbar für Extraktionsberechnungen und Wasserrezepte.</p>
     </Section>
   );
 }
@@ -1020,42 +1060,63 @@ export function ApiDocs() {
 
         <div className="mx-auto max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 lg:pl-10 lg:pr-10">
           <Section id="getting-started" eyebrow="01" title="Getting Started">
-            <ol className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-3">
               {[
-                { t: "API-Key anfordern", d: "Schreiben Sie uns an api@brewwater.de — Sie erhalten Ihren Key innerhalb von 24 Stunden. Free-Plan: 100 Anfragen/Monat, kostenlos." },
-                { t: "Anfrage authentifizieren", d: "Übergeben Sie den Key im X-API-Key-Header jeder Anfrage. Kein OAuth, kein Bearer-Token." },
-                { t: "Wasserchemie abrufen", d: "GET-Anfrage mit einer PLZ — Sie erhalten pH, Gesamthärte, Calcium, Magnesium und alle weiteren Parameter als JSON." },
+                { t: "API-Key anfordern", d: "E-Mail an api@brewwater.de. Key in 24 h, Free-Plan inklusive." },
+                { t: "Header setzen", d: "Key im X-API-Key-Header übergeben. Kein OAuth, kein Bearer." },
+                { t: "Wasser abrufen", d: "GET mit PLZ — pH, Härte, Mineralien als JSON zurück." },
               ].map((s, i) => (
-                <li key={s.t} className="flex gap-5">
-                  <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                    {i + 1}
+                <div key={s.t} className="relative rounded-2xl border border-border bg-card p-5">
+                  <div className="font-display text-4xl font-semibold leading-none tracking-tight text-primary tabular-nums">
+                    {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div>
-                    <div className="text-lg font-semibold text-foreground">{s.t}</div>
-                    <div className="mt-1 text-[15px] text-muted-foreground">{s.d}</div>
-                  </div>
-                </li>
+                  <div className="mt-4 text-[15px] font-semibold text-foreground">{s.t}</div>
+                  <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{s.d}</p>
+                </div>
               ))}
-            </ol>
+            </div>
             <CodeBlock code={CURL} />
           </Section>
 
           <Section id="authentication" eyebrow="02" title="Authentication">
-            <CodeBlock code={`X-API-Key: bw_live_4f8a...c91d`} />
-            <ul className="space-y-2 text-[15px] text-muted-foreground">
-              <li>Keys beginnen immer mit <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_</code> und werden einmalig ausgestellt</li>
-              <li>Kein OAuth, kein Bearer-Token — nur den Header setzen</li>
-              <li>Key verloren? Schreib uns: <a href="mailto:api@brewwater.de" className="text-primary hover:underline">api@brewwater.de</a></li>
-            </ul>
+            <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr] lg:items-stretch">
+              <CodeBlock code={`X-API-Key: bw_live_4f8a...c91d`} />
+              <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+                {[
+                  { icon: ShieldCheck, t: "Kein OAuth", d: "Nur den Header setzen." },
+                  { icon: Hash, t: "bw_live_ Prefix", d: "Alle Keys beginnen so." },
+                  { icon: Lock, t: "Einmalig ausgestellt", d: "Verloren? api@brewwater.de" },
+                ].map((f) => (
+                  <div key={f.t} className="flex items-start gap-3">
+                    <div className="flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <f.icon className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[13px] font-semibold text-foreground">{f.t}</div>
+                      <div className="text-[12px] text-muted-foreground">{f.d}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </Section>
 
           <Section id="endpoints" eyebrow="03" title="Endpoints">
-            <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-5 py-4 font-mono text-sm overflow-x-auto">
-              <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap">GET</span>
-              <span className="text-foreground whitespace-nowrap">/v1/water?plz=20095</span>
+            <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-5 py-5 font-mono text-base overflow-x-auto shadow-sm">
+              <span className="rounded-md bg-primary px-2.5 py-1 text-xs font-bold tracking-wider text-primary-foreground whitespace-nowrap">GET</span>
+              <span className="text-foreground whitespace-nowrap">/v1/water</span>
+              <span className="text-muted-foreground whitespace-nowrap">?plz=20095</span>
             </div>
+
+            <Tabs
+              tabs={[
+                { label: "cURL", code: CURL },
+                { label: "JavaScript", code: JS },
+                { label: "Python", code: PY },
+              ]}
+            />
+
             <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Query parameters</h3>
               {/* Mobile */}
               <div className="sm:hidden space-y-3">
                 {PARAMS.map((p) => (
@@ -1094,21 +1155,7 @@ export function ApiDocs() {
               </div>
             </div>
 
-            <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Example request</h3>
-              <Tabs
-                tabs={[
-                  { label: "cURL", code: CURL },
-                  { label: "JavaScript", code: JS },
-                  { label: "Python", code: PY },
-                ]}
-              />
-            </div>
-
-            <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Example response</h3>
-              <CodeBlock code={RESPONSE} />
-            </div>
+            <CollapsibleResponse code={RESPONSE} />
           </Section>
 
           <SchemaSection />
@@ -1119,7 +1166,7 @@ export function ApiDocs() {
               {ERRORS.map((e) => (
                 <div key={e.name} className="rounded-xl border border-border bg-card p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-foreground">{e.code}</span>
+                    <span className={errorBadgeClasses(e.code)}>{e.code}</span>
                     <code className="font-mono text-[12px] text-muted-foreground">{e.name}</code>
                   </div>
                   <p className="text-[13px] text-muted-foreground">{e.desc}</p>
@@ -1139,7 +1186,7 @@ export function ApiDocs() {
                 <tbody className="divide-y divide-border bg-card">
                   {ERRORS.map((e) => (
                     <tr key={e.code}>
-                      <td className="px-4 py-3 font-mono text-[13px] text-foreground">{e.code}</td>
+                      <td className="px-4 py-3"><span className={errorBadgeClasses(e.code)}>{e.code}</span></td>
                       <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{e.name}</td>
                       <td className="px-4 py-3 text-muted-foreground">{e.desc}</td>
                     </tr>
@@ -1156,44 +1203,31 @@ X-RateLimit-Remaining: 847
 X-RateLimit-Reset: 2026-07-01T00:00:00.000Z
 X-Request-Id: 3f2a1b4c-...`}
             />
-            {/* Mobile */}
-            <div className="sm:hidden space-y-2">
+            <div className="grid gap-3 sm:grid-cols-3">
               {[
-                { plan: "Free", limit: "100 / Monat", price: "0 €" },
-                { plan: "Starter", limit: "1.000 / Monat", price: "9 €" },
-                { plan: "Pro", limit: "10.000 / Monat", price: "29 €" },
+                { plan: "Free", limit: "100", price: "0 €", highlight: false },
+                { plan: "Starter", limit: "1.000", price: "9 € / Monat", highlight: false },
+                { plan: "Pro", limit: "10.000", price: "29 € / Monat", highlight: true },
               ].map((r) => (
-                <div key={r.plan} className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
-                  <span className="font-medium text-foreground">{r.plan}</span>
-                  <span className="font-mono text-[13px] text-muted-foreground">{r.limit}</span>
-                  <span className="text-[13px] text-muted-foreground">{r.price}</span>
+                <div
+                  key={r.plan}
+                  className={`rounded-2xl border bg-card p-5 ${r.highlight ? "border-primary/40 ring-1 ring-primary/20" : "border-border"}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-foreground">{r.plan}</span>
+                    {r.highlight && (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                        Beliebt
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-4 font-display text-4xl font-semibold leading-none tracking-tight text-foreground tabular-nums">
+                    {r.limit}
+                  </div>
+                  <p className="mt-1.5 text-[11px] uppercase tracking-wider text-muted-foreground">Anfragen / Monat</p>
+                  <p className="mt-4 text-[13px] text-muted-foreground">{r.price}</p>
                 </div>
               ))}
-            </div>
-            {/* Desktop */}
-            <div className="hidden sm:block overflow-x-auto no-scrollbar rounded-2xl border border-border">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-3 font-medium">Plan</th>
-                    <th className="px-4 py-3 font-medium">Anfragen/Monat</th>
-                    <th className="px-4 py-3 font-medium">Preis</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border bg-card">
-                  {[
-                    { plan: "Free", limit: "100", price: "0 €" },
-                    { plan: "Starter", limit: "1.000", price: "9 €" },
-                    { plan: "Pro", limit: "10.000", price: "29 €" },
-                  ].map((r) => (
-                    <tr key={r.plan}>
-                      <td className="px-4 py-3 font-medium text-foreground">{r.plan}</td>
-                      <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{r.limit}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{r.price}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           </Section>
 
