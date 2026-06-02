@@ -757,6 +757,42 @@ function SchemaRow({ s }: { s: { f: string; t: string; d: string } }) {
   );
 }
 
+function CollapsibleResponse({ code }: { code: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-2xl border border-border bg-card overflow-hidden">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between px-5 py-3.5 text-left transition hover:bg-muted/40"
+      >
+        <div className="flex items-center gap-2">
+          <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">200 OK</span>
+          <span className="text-sm font-medium text-foreground">Example response</span>
+          <span className="text-xs text-muted-foreground">application/json</span>
+        </div>
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+      </button>
+      <div className={`grid transition-all duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+        <div className="overflow-hidden">
+          <div className="border-t border-border">
+            <CodeBlock code={code} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function errorBadgeClasses(code: string): string {
+  const base = "inline-flex items-center justify-center rounded-md px-2 py-0.5 font-mono text-xs font-bold tabular-nums";
+  if (code.startsWith("5")) return `${base} bg-red-500/10 text-red-600`;
+  if (code === "401" || code === "403") return `${base} bg-red-500/10 text-red-600`;
+  if (code === "429") return `${base} bg-amber-500/15 text-amber-700`;
+  if (code === "400" || code === "422") return `${base} bg-orange-500/10 text-orange-600`;
+  if (code === "404") return `${base} bg-muted text-muted-foreground`;
+  return `${base} bg-muted text-foreground`;
+}
+
 const ALL_SCHEMA = [...SCHEMA_META, ...SCHEMA_VALUES];
 const SCHEMA_DEFAULT_COUNT = 5;
 
