@@ -163,7 +163,7 @@ function Tabs({ tabs }: { tabs: { label: string; code: string }[] }) {
 
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-32 py-20 sm:py-28">
+    <section id={id} className="scroll-mt-32 py-20 sm:py-28 reveal">
       <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
         <div>
           {eyebrow && (
@@ -383,6 +383,49 @@ type ApiResult = {
   ms: number;
   data: Record<string, unknown>;
 } | null;
+
+// Triggers count-up when element scrolls into view
+function useScrollCountUp(target: number, duration = 1400) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || started.current) return;
+      started.current = true;
+      const start = performance.now();
+      function tick(now: number) {
+        const t = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        setDisplay(Math.round(target * ease * 100) / 100);
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration]);
+
+  return { ref, display };
+}
+
+function StatCard({ prefix = "", num, suffix = "", label }: { prefix?: string; num?: number; suffix?: string; label: string }) {
+  const { ref, display } = useScrollCountUp(num ?? 0);
+  const formatted = num !== undefined
+    ? (Number.isInteger(num) ? display.toFixed(0) : display.toFixed(2))
+    : "";
+  return (
+    <div ref={ref} className="px-4 text-center sm:border-r sm:border-border sm:last:border-r-0">
+      <div className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl tabular-nums">
+        {num !== undefined ? `${prefix}${formatted}${suffix}` : `${prefix}${suffix}`}
+      </div>
+      <div className="mt-2 text-sm text-muted-foreground">{label}</div>
+    </div>
+  );
+}
 
 function useCountUp(target: number | null, duration = 600) {
   const [display, setDisplay] = useState<number | null>(null);
@@ -779,19 +822,10 @@ export function ApiDocs() {
         {/* Stats strip */}
         <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6 sm:mt-32">
           <div className="grid grid-cols-2 gap-y-8 border-y border-border py-10 sm:grid-cols-4">
-            {[
-              { k: "50+", v: "deutsche Städte" },
-              { k: "99.98%", v: "Uptime SLA" },
-              { k: "<20ms", v: "Median Latenz" },
-              { k: "SCA", v: "Wasserstandards abgedeckt" },
-            ].map((s) => (
-              <div key={s.k} className="px-4 text-center sm:border-r sm:border-border sm:last:border-r-0">
-                <div className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                  {s.k}
-                </div>
-                <div className="mt-2 text-sm text-muted-foreground">{s.v}</div>
-              </div>
-            ))}
+            <StatCard num={50} suffix="+" label="deutsche Städte" />
+            <StatCard num={99.98} suffix="%" label="Uptime SLA" />
+            <StatCard prefix="<" num={20} suffix="ms" label="Median Latenz" />
+            <StatCard prefix="SCA" label="Wasserstandards abgedeckt" />
           </div>
         </section>
 
@@ -856,12 +890,13 @@ export function ApiDocs() {
                       "Webhooks bei Updates",
                     ],
                   },
-                ].map((plan) => (
+                ].map((plan, i) => (
                   <div
                     key={plan.name}
-                    className={`relative flex flex-col rounded-2xl border bg-card p-6 ${
+                    className={`reveal relative flex flex-col rounded-2xl border bg-card p-6 ${
                       plan.highlight ? "border-primary ring-2 ring-primary/30" : "border-border"
                     }`}
+                    style={{ transitionDelay: `${i * 100}ms` }}
                   >
                     <div className="flex items-center justify-between">
                       <h3 className="text-base font-semibold text-foreground">{plan.name}</h3>

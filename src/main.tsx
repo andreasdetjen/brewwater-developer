@@ -1,4 +1,15 @@
 import { StrictMode, useEffect } from "react";
+
+// Global scroll reveal observer
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+// Also observe dynamically added elements
+const mutationObs = new MutationObserver(() => {
+  document.querySelectorAll(".reveal:not(.visible)").forEach((el) => revealObserver.observe(el));
+});
+mutationObs.observe(document.body, { childList: true, subtree: true });
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
