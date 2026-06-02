@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Droplet,
-
   Key,
   ArrowRight,
   Check,
@@ -11,6 +10,7 @@ import {
   ShieldCheck,
   Globe2,
   Activity,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -1195,28 +1195,43 @@ X-Request-Id: 3f2a1b4c-...`}
             <FaqList />
           </div>
 
-          {/* CTA */}
+          {/* Questions CTA */}
           <div className="py-20 sm:py-28">
             <div
-              className="relative overflow-hidden rounded-[2rem] px-8 py-16 text-center sm:px-16 sm:py-24"
+              className="relative overflow-hidden rounded-[2rem] px-8 py-16 text-center sm:px-16 sm:py-20"
               style={{
                 background:
                   "radial-gradient(120% 80% at 50% 0%, oklch(0.62 0.28 264) 0%, oklch(0.4 0.3 264) 100%)",
               }}
             >
-              <h3 className="mx-auto max-w-2xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                Besserer Kaffee beginnt beim Wasser.
+              {/* Grid overlay */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-[0.12]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+                  backgroundSize: "40px 40px",
+                }}
+              />
+
+              {/* Icon */}
+              <div className="relative mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-lg">
+                <MessageCircle className="h-6 w-6 text-primary" />
+              </div>
+
+              <h3 className="relative mx-auto max-w-xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                Noch Fragen?
               </h3>
-              <p className="mx-auto mt-5 max-w-xl text-white/80 sm:text-lg">
-                Kostenlos starten — keine Kreditkarte. Echte Kaffeewasser-Daten in wenigen Minuten in Ihrer App.
+              <p className="relative mx-auto mt-4 max-w-md text-white/75 sm:text-lg">
+                Keine Antwort gefunden? Wir helfen gerne weiter — direkt per E-Mail.
               </p>
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-                <Button size="lg" variant="secondary" className="h-12 gap-2 rounded-full bg-white px-6 text-base text-foreground hover:bg-white/90">
-                  API Key anfordern <ArrowRight className="h-4 w-4" />
-                </Button>
-                <Button size="lg" variant="outline" className="h-12 gap-2 rounded-full border-white/30 bg-transparent px-6 text-base text-white hover:bg-white/10 hover:text-white">
-                  Vertrieb kontaktieren
-                </Button>
+              <div className="relative mt-8">
+                <a
+                  href="mailto:api@brewwater.de?subject=Frage zur brewwater API"
+                  className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-7 text-base font-semibold text-foreground transition hover:bg-white/90"
+                >
+                  Schreib uns
+                </a>
               </div>
             </div>
           </div>
