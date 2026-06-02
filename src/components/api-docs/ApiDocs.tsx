@@ -753,16 +753,19 @@ function SchemaRow({ s }: { s: { f: string; t: string; d: string } }) {
   );
 }
 
+const ALL_SCHEMA = [...SCHEMA_META, ...SCHEMA_VALUES];
+const SCHEMA_DEFAULT_COUNT = 5;
+
 function SchemaSection() {
-  const [valuesOpen, setValuesOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const visible = expanded ? ALL_SCHEMA : ALL_SCHEMA.slice(0, SCHEMA_DEFAULT_COUNT);
+  const hidden = ALL_SCHEMA.length - SCHEMA_DEFAULT_COUNT;
+
   return (
     <Section id="schema" eyebrow="04" title="Response Schema">
-      <p>Jede Antwort enthält ein flaches JSON-Objekt mit allen kaffeerelevanten Wasserwerten — direkt verwendbar für Extraktionsberechnungen und Wasserrezepte.</p>
-
       {/* Mobile */}
       <div className="sm:hidden space-y-2">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground px-1">Metadaten</p>
-        {SCHEMA_META.map((s) => (
+        {visible.map((s) => (
           <div key={s.f} className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 mb-1">
               <code className="font-mono text-[12px] font-semibold text-foreground">{s.f}</code>
@@ -772,21 +775,11 @@ function SchemaSection() {
           </div>
         ))}
         <button
-          onClick={() => setValuesOpen(v => !v)}
-          className="w-full flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-[13px] font-medium text-foreground mt-2"
+          onClick={() => setExpanded(v => !v)}
+          className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-4 py-3 text-[13px] font-medium text-muted-foreground hover:text-foreground transition mt-1"
         >
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Wasserwerte</span>
-          <span className="text-[12px] text-muted-foreground">{valuesOpen ? "Ausblenden" : `${SCHEMA_VALUES.length} Felder anzeigen`}</span>
+          {expanded ? "Ausblenden ↑" : `${hidden} weitere Felder anzeigen ↓`}
         </button>
-        {valuesOpen && SCHEMA_VALUES.map((s) => (
-          <div key={s.f} className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <code className="font-mono text-[12px] font-semibold text-foreground">{s.f}</code>
-              <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{s.t}</span>
-            </div>
-            <p className="text-[13px] text-muted-foreground">{s.d}</p>
-          </div>
-        ))}
       </div>
 
       {/* Desktop */}
@@ -800,27 +793,21 @@ function SchemaSection() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border bg-card">
+            {visible.map((s) => <SchemaRow key={s.f} s={s} />)}
             <tr>
-              <td colSpan={3} className="px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground bg-muted/40">
-                Metadaten
-              </td>
-            </tr>
-            {SCHEMA_META.map((s) => <SchemaRow key={s.f} s={s} />)}
-            <tr>
-              <td colSpan={3} className="px-0 py-0 bg-muted/40">
+              <td colSpan={3} className="px-0 py-0">
                 <button
-                  onClick={() => setValuesOpen(v => !v)}
-                  className="w-full flex items-center justify-between px-4 py-2 text-left hover:bg-muted/60 transition"
+                  onClick={() => setExpanded(v => !v)}
+                  className="w-full flex items-center justify-center gap-1.5 px-4 py-3 text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition"
                 >
-                  <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Wasserwerte</span>
-                  <span className="text-[12px] text-muted-foreground">{valuesOpen ? "Ausblenden ↑" : `${SCHEMA_VALUES.length} Felder anzeigen ↓`}</span>
+                  {expanded ? "Ausblenden ↑" : `${hidden} weitere Felder anzeigen ↓`}
                 </button>
               </td>
             </tr>
-            {valuesOpen && SCHEMA_VALUES.map((s) => <SchemaRow key={s.f} s={s} />)}
           </tbody>
         </table>
       </div>
+      <p className="text-[14px] text-muted-foreground">Flaches JSON-Objekt — alle Werte direkt verwendbar für Extraktionsberechnungen und Wasserrezepte.</p>
     </Section>
   );
 }
@@ -1033,10 +1020,6 @@ export function ApiDocs() {
 
         <div className="mx-auto max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 lg:pl-10 lg:pr-10">
           <Section id="getting-started" eyebrow="01" title="Getting Started">
-            <p>
-              In unter einer Minute zur ersten Antwort mit echten Kaffeewasser-Werten. API-Key anlegen,
-              Stadt oder PLZ übergeben — fertig.
-            </p>
             <ol className="space-y-6">
               {[
                 { t: "API-Key anfordern", d: "Schreiben Sie uns an api@brewwater.de — Sie erhalten Ihren Key innerhalb von 24 Stunden. Free-Plan: 100 Anfragen/Monat, kostenlos." },
@@ -1058,13 +1041,6 @@ export function ApiDocs() {
           </Section>
 
           <Section id="authentication" eyebrow="02" title="Authentication">
-            <p>
-              Jede Anfrage benötigt einen{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-API-Key</code>{" "}
-              Header. Keys beginnen immer mit{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_</code>
-              {" "}und werden nach der Registrierung einmalig ausgestellt.
-            </p>
             <CodeBlock code={`X-API-Key: bw_live_4f8a...c91d`} />
           </Section>
 
@@ -1073,8 +1049,6 @@ export function ApiDocs() {
               <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap">GET</span>
               <span className="text-foreground whitespace-nowrap">/v1/water?plz=20095</span>
             </div>
-            <p>Liefert das aktuelle Wasserprofil für eine deutsche Postleitzahl — mit allen Parametern, die für Espresso und Kaffee relevant sind.</p>
-
             <div>
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Query parameters</h3>
               {/* Mobile */}
@@ -1135,11 +1109,6 @@ export function ApiDocs() {
           <SchemaSection />
 
           <Section id="errors" eyebrow="05" title="Error Codes">
-            <p>
-              brewwater nutzt konventionelle HTTP-Status-Codes. Fehler liefern ein JSON-Objekt mit{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">error</code> und{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">message</code>.
-            </p>
             {/* Mobile */}
             <div className="sm:hidden space-y-3">
               {ERRORS.map((e) => (
@@ -1176,10 +1145,6 @@ export function ApiDocs() {
           </Section>
 
           <Section id="rate-limits" eyebrow="06" title="Rate Limits">
-            <p>
-              Limits gelten <strong className="text-foreground">pro Monat</strong>, nicht pro Minute.
-              Jede Antwort enthält den aktuellen Stand in den Headern:
-            </p>
             <CodeBlock
               code={`X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 847
@@ -1225,12 +1190,6 @@ X-Request-Id: 3f2a1b4c-...`}
                 </tbody>
               </table>
             </div>
-            <p>
-              Beim Überschreiten erhalten Sie{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">429 rate_limit_exceeded</code>.
-              Der Zähler resettet automatisch am 1. des Folgemonats (Zeitstempel in{" "}
-              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">X-RateLimit-Reset</code>).
-            </p>
           </Section>
 
           {/* FAQ */}
