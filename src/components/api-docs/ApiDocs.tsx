@@ -1224,12 +1224,8 @@ X-Request-Id: 3f2a1b4c-...`}
             </div>
 
             {/* Divider + copyright */}
-            <div className="mt-12 border-t border-white/15 pt-6 flex flex-col gap-2 sm:flex-row sm:justify-between text-xs text-white/40">
+            <div className="mt-12 border-t border-white/15 pt-6 text-xs text-white/40">
               <span>Copyright © {new Date().getFullYear()} brewwater. All Rights Reserved.</span>
-              <div className="flex gap-5">
-                <a href="/datenschutz" className="hover:text-white/70 transition-colors">Datenschutzerklärung</a>
-                <a href="/impressum" className="hover:text-white/70 transition-colors">Impressum</a>
-              </div>
             </div>
           </div>
 
