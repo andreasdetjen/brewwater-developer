@@ -375,7 +375,7 @@ function FaqList() {
   );
 }
 
-const TEST_KEY = "bw_live_test1234567890abcdef1234567890ab";
+const PROXY_URL = "/api/water";
 
 const DEMO_CITIES = [
   { label: "Hamburg", plz: "20095" },
@@ -497,8 +497,8 @@ function LivePlayground() {
     const start = Date.now();
     try {
       const res = await fetch(
-        `https://api.brewwater.de/v1/water?plz=${targetPlz.trim()}`,
-        { headers: { "X-API-Key": TEST_KEY }, signal: controller.signal },
+        `${PROXY_URL}?plz=${targetPlz.trim()}`,
+        { signal: controller.signal },
       );
       const ms = Date.now() - start;
       const data = await res.json();
