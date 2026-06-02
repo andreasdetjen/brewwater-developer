@@ -1215,8 +1215,12 @@ X-Request-Id: 3f2a1b4c-...`}
               <div>
                 <div className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-4">Support</div>
                 <ul className="space-y-3 text-sm text-white/75">
-                  {["Kontakt", "Impressum", "Datenschutz"].map((l) => (
-                    <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
+                  {[
+                    { label: "Kontakt", href: "mailto:api@brewwater.de" },
+                    { label: "Impressum", href: "https://brewwater.de/impressum" },
+                    { label: "Datenschutz", href: "https://brewwater.de/datenschutz" },
+                  ].map((l) => (
+                    <li key={l.label}><a href={l.href} className="hover:text-white transition-colors">{l.label}</a></li>
                   ))}
                 </ul>
               </div>
@@ -1226,8 +1230,8 @@ X-Request-Id: 3f2a1b4c-...`}
             <div className="mt-12 border-t border-white/15 pt-6 flex flex-col gap-2 sm:flex-row sm:justify-between text-xs text-white/40">
               <span>Copyright © {new Date().getFullYear()} brewwater. All Rights Reserved.</span>
               <div className="flex gap-5">
-                <a href="#" className="hover:text-white/70 transition-colors">Datenschutzerklärung</a>
-                <a href="#" className="hover:text-white/70 transition-colors">Impressum</a>
+                <a href="https://brewwater.de/datenschutz" className="hover:text-white/70 transition-colors">Datenschutzerklärung</a>
+                <a href="https://brewwater.de/impressum" className="hover:text-white/70 transition-colors">Impressum</a>
               </div>
             </div>
           </div>
