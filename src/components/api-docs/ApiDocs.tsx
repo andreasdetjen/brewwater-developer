@@ -243,10 +243,10 @@ function HeroIllustration() {
           {/* Left cards */}
           <div className="hidden flex-col gap-6 lg:flex">
             {[
-              { label: "GET /v1/water?plz=10115", icon: Globe2 },
-              { label: "RA: 4.8 · pH 7.2 · °dH 14.1", icon: Activity },
+              { label: "GET /v1/water?plz=10115", icon: Globe2, cls: "hero-float-a" },
+              { label: "RA: 4.8 · pH 7.2 · °dH 14.1", icon: Activity, cls: "hero-float-b" },
             ].map((c) => (
-              <div key={c.label} className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl shadow-black/10 backdrop-blur">
+              <div key={c.label} className={`${c.cls} flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl shadow-black/10 backdrop-blur`}>
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <c.icon className="h-4 w-4" />
                 </div>
@@ -256,7 +256,7 @@ function HeroIllustration() {
           </div>
 
           {/* Center device */}
-          <div className="mx-auto w-full max-w-sm">
+          <div className="hero-center mx-auto w-full max-w-sm">
             <div className="rounded-3xl bg-white/95 p-5 shadow-2xl shadow-black/20 backdrop-blur">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -289,10 +289,10 @@ function HeroIllustration() {
           {/* Right cards */}
           <div className="hidden flex-col gap-6 lg:flex lg:items-end">
             {[
-              { label: "Eignung: Espresso ✓", icon: ShieldCheck },
-              { label: "12ms · SCA-konform geprüft", icon: Zap },
+              { label: "Eignung: Espresso ✓", icon: ShieldCheck, cls: "hero-float-c" },
+              { label: "12ms · SCA-konform geprüft", icon: Zap, cls: "hero-float-d" },
             ].map((c) => (
-              <div key={c.label} className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl shadow-black/10 backdrop-blur">
+              <div key={c.label} className={`${c.cls} flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-xl shadow-black/10 backdrop-blur`}>
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <c.icon className="h-4 w-4" />
                 </div>
