@@ -816,9 +816,10 @@ function SchemaSection() {
         ))}
         <button
           onClick={() => setExpanded(v => !v)}
-          className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-4 py-3 text-[13px] font-medium text-muted-foreground hover:text-foreground transition mt-1"
+          className="group w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-[13px] font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition mt-1"
         >
-          {expanded ? "Ausblenden ↑" : `${hidden} weitere Felder anzeigen ↓`}
+          <span>{expanded ? "Weniger anzeigen" : `${hidden} weitere Felder`}</span>
+          <ChevronDown className={`h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5 ${expanded ? "rotate-180" : ""}`} />
         </button>
       </div>
 
@@ -838,16 +839,16 @@ function SchemaSection() {
               <td colSpan={3} className="px-0 py-0">
                 <button
                   onClick={() => setExpanded(v => !v)}
-                  className="w-full flex items-center justify-center gap-1.5 px-4 py-3 text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition"
+                  className="group w-full flex items-center justify-center gap-2 px-4 py-3 text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition"
                 >
-                  {expanded ? "Ausblenden ↑" : `${hidden} weitere Felder anzeigen ↓`}
+                  <span>{expanded ? "Weniger anzeigen" : `${hidden} weitere Felder`}</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5 ${expanded ? "rotate-180" : ""}`} />
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p className="text-[14px] text-muted-foreground">Flaches JSON-Objekt — alle Werte direkt verwendbar für Extraktionsberechnungen und Wasserrezepte.</p>
     </Section>
   );
 }
