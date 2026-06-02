@@ -223,8 +223,8 @@ export function Changelog() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} brewwater. Alle Rechte vorbehalten.</span>
           <div className="flex gap-5">
-            <a href="https://brewwater.de/impressum" className="hover:text-foreground transition">Impressum</a>
-            <a href="https://brewwater.de/datenschutz" className="hover:text-foreground transition">Datenschutz</a>
+            <a href="/impressum" className="hover:text-foreground transition">Impressum</a>
+            <a href="/datenschutz" className="hover:text-foreground transition">Datenschutz</a>
             <a href="https://brewwater.de" className="hover:text-foreground transition">brewwater.de</a>
           </div>
         </div>

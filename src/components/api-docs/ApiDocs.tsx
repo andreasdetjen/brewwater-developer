@@ -1217,7 +1217,7 @@ X-Request-Id: 3f2a1b4c-...`}
                 <ul className="space-y-3 text-sm text-white/75">
                   {[
                     { label: "Kontakt", href: "mailto:api@brewwater.de" },
-                    { label: "Impressum", href: "https://brewwater.de/impressum" },
+                    { label: "Impressum", href: "/impressum" },
                     { label: "Datenschutz", href: "https://brewwater.de/datenschutz" },
                   ].map((l) => (
                     <li key={l.label}><a href={l.href} className="hover:text-white transition-colors">{l.label}</a></li>
@@ -1231,7 +1231,7 @@ X-Request-Id: 3f2a1b4c-...`}
               <span>Copyright © {new Date().getFullYear()} brewwater. All Rights Reserved.</span>
               <div className="flex gap-5">
                 <a href="https://brewwater.de/datenschutz" className="hover:text-white/70 transition-colors">Datenschutzerklärung</a>
-                <a href="https://brewwater.de/impressum" className="hover:text-white/70 transition-colors">Impressum</a>
+                <a href="/impressum" className="hover:text-white/70 transition-colors">Impressum</a>
               </div>
             </div>
           </div>
