@@ -1024,42 +1024,63 @@ export function ApiDocs() {
 
         <div className="mx-auto max-w-6xl pl-4 pr-4 sm:pl-6 sm:pr-6 lg:pl-10 lg:pr-10">
           <Section id="getting-started" eyebrow="01" title="Getting Started">
-            <ol className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-3">
               {[
-                { t: "API-Key anfordern", d: "Schreiben Sie uns an api@brewwater.de — Sie erhalten Ihren Key innerhalb von 24 Stunden. Free-Plan: 100 Anfragen/Monat, kostenlos." },
-                { t: "Anfrage authentifizieren", d: "Übergeben Sie den Key im X-API-Key-Header jeder Anfrage. Kein OAuth, kein Bearer-Token." },
-                { t: "Wasserchemie abrufen", d: "GET-Anfrage mit einer PLZ — Sie erhalten pH, Gesamthärte, Calcium, Magnesium und alle weiteren Parameter als JSON." },
+                { t: "API-Key anfordern", d: "E-Mail an api@brewwater.de. Key in 24 h, Free-Plan inklusive." },
+                { t: "Header setzen", d: "Key im X-API-Key-Header übergeben. Kein OAuth, kein Bearer." },
+                { t: "Wasser abrufen", d: "GET mit PLZ — pH, Härte, Mineralien als JSON zurück." },
               ].map((s, i) => (
-                <li key={s.t} className="flex gap-5">
-                  <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                    {i + 1}
+                <div key={s.t} className="relative rounded-2xl border border-border bg-card p-5">
+                  <div className="font-display text-4xl font-semibold leading-none tracking-tight text-primary tabular-nums">
+                    {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div>
-                    <div className="text-lg font-semibold text-foreground">{s.t}</div>
-                    <div className="mt-1 text-[15px] text-muted-foreground">{s.d}</div>
-                  </div>
-                </li>
+                  <div className="mt-4 text-[15px] font-semibold text-foreground">{s.t}</div>
+                  <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{s.d}</p>
+                </div>
               ))}
-            </ol>
+            </div>
             <CodeBlock code={CURL} />
           </Section>
 
           <Section id="authentication" eyebrow="02" title="Authentication">
-            <CodeBlock code={`X-API-Key: bw_live_4f8a...c91d`} />
-            <ul className="space-y-2 text-[15px] text-muted-foreground">
-              <li>Keys beginnen immer mit <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_</code> und werden einmalig ausgestellt</li>
-              <li>Kein OAuth, kein Bearer-Token — nur den Header setzen</li>
-              <li>Key verloren? Schreib uns: <a href="mailto:api@brewwater.de" className="text-primary hover:underline">api@brewwater.de</a></li>
-            </ul>
+            <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr] lg:items-stretch">
+              <CodeBlock code={`X-API-Key: bw_live_4f8a...c91d`} />
+              <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+                {[
+                  { icon: ShieldCheck, t: "Kein OAuth", d: "Nur den Header setzen." },
+                  { icon: Hash, t: "bw_live_ Prefix", d: "Alle Keys beginnen so." },
+                  { icon: Lock, t: "Einmalig ausgestellt", d: "Verloren? api@brewwater.de" },
+                ].map((f) => (
+                  <div key={f.t} className="flex items-start gap-3">
+                    <div className="flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <f.icon className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[13px] font-semibold text-foreground">{f.t}</div>
+                      <div className="text-[12px] text-muted-foreground">{f.d}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </Section>
 
           <Section id="endpoints" eyebrow="03" title="Endpoints">
-            <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-5 py-4 font-mono text-sm overflow-x-auto">
-              <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary whitespace-nowrap">GET</span>
-              <span className="text-foreground whitespace-nowrap">/v1/water?plz=20095</span>
+            <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-5 py-5 font-mono text-base overflow-x-auto shadow-sm">
+              <span className="rounded-md bg-primary px-2.5 py-1 text-xs font-bold tracking-wider text-primary-foreground whitespace-nowrap">GET</span>
+              <span className="text-foreground whitespace-nowrap">/v1/water</span>
+              <span className="text-muted-foreground whitespace-nowrap">?plz=20095</span>
             </div>
+
+            <Tabs
+              tabs={[
+                { label: "cURL", code: CURL },
+                { label: "JavaScript", code: JS },
+                { label: "Python", code: PY },
+              ]}
+            />
+
             <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Query parameters</h3>
               {/* Mobile */}
               <div className="sm:hidden space-y-3">
                 {PARAMS.map((p) => (
@@ -1098,21 +1119,7 @@ export function ApiDocs() {
               </div>
             </div>
 
-            <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Example request</h3>
-              <Tabs
-                tabs={[
-                  { label: "cURL", code: CURL },
-                  { label: "JavaScript", code: JS },
-                  { label: "Python", code: PY },
-                ]}
-              />
-            </div>
-
-            <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Example response</h3>
-              <CodeBlock code={RESPONSE} />
-            </div>
+            <CollapsibleResponse code={RESPONSE} />
           </Section>
 
           <SchemaSection />
