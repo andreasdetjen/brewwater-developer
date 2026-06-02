@@ -14,7 +14,6 @@ import {
   ChevronDown,
   Lock,
   Hash,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
