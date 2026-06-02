@@ -78,7 +78,7 @@ const PARAMS = [
   { name: "format", type: "string", req: "optional", desc: "\"full\" (Standard) oder \"minimal\" — minimal liefert nur Härte, Calcium, Magnesium und pH." },
 ];
 
-const SCHEMA = [
+const SCHEMA_META = [
   { f: "plz", t: "string", d: "Abgefragte Postleitzahl." },
   { f: "city", t: "string", d: "Stadtname des Versorgungsgebiets." },
   { f: "district", t: "string|null", d: "Stadtteil oder Versorgungszone, falls bekannt." },
@@ -89,6 +89,9 @@ const SCHEMA = [
   { f: "data_date", t: "string", d: "Datum des Analysedatenstands (YYYY-MM-DD)." },
   { f: "source.name", t: "string", d: "Quellenbezeichnung (z. B. Jahresbericht des Versorgers)." },
   { f: "source.url", t: "string|null", d: "URL zur Originalquelle, sofern verfügbar." },
+];
+
+const SCHEMA_VALUES = [
   { f: "values.total_hardness_dH", t: "number|null", d: "Gesamthärte in °dH. SCA-Zielbereich für Espresso: 3–8 °dH." },
   { f: "values.carbonate_hardness_dH", t: "number|null", d: "Karbonathärte in °dH." },
   { f: "values.acid_capacity_KS43_mmolL", t: "number|null", d: "Säurekapazität KS4,3 in mmol/L." },
@@ -1051,7 +1054,18 @@ export function ApiDocs() {
             <p>Jede Antwort enthält ein flaches JSON-Objekt mit allen kaffeerelevanten Wasserwerten — direkt verwendbar für Extraktionsberechnungen und Wasserrezepte.</p>
             {/* Mobile */}
             <div className="sm:hidden space-y-2">
-              {SCHEMA.map((s) => (
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground px-1">Metadaten</p>
+              {SCHEMA_META.map((s) => (
+                <div key={s.f} className="rounded-xl border border-border bg-card p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <code className="font-mono text-[12px] font-semibold text-foreground">{s.f}</code>
+                    <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{s.t}</span>
+                  </div>
+                  <p className="text-[13px] text-muted-foreground">{s.d}</p>
+                </div>
+              ))}
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground px-1 pt-3">Wasserwerte</p>
+              {SCHEMA_VALUES.map((s) => (
                 <div key={s.f} className="rounded-xl border border-border bg-card p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <code className="font-mono text-[12px] font-semibold text-foreground">{s.f}</code>
@@ -1072,7 +1086,24 @@ export function ApiDocs() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border bg-card">
-                  {SCHEMA.map((s) => (
+                  <tr>
+                    <td colSpan={3} className="px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground bg-muted/40">
+                      Metadaten
+                    </td>
+                  </tr>
+                  {SCHEMA_META.map((s) => (
+                    <tr key={s.f}>
+                      <td className="px-4 py-3 font-mono text-[13px] text-foreground">{s.f}</td>
+                      <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{s.t}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{s.d}</td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td colSpan={3} className="px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground bg-muted/40">
+                      Wasserwerte
+                    </td>
+                  </tr>
+                  {SCHEMA_VALUES.map((s) => (
                     <tr key={s.f}>
                       <td className="px-4 py-3 font-mono text-[13px] text-foreground">{s.f}</td>
                       <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{s.t}</td>
