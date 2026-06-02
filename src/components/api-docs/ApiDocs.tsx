@@ -335,7 +335,7 @@ function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
     <div className="rounded-2xl bg-[#f4f4f5]">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full cursor-pointer items-center gap-6 px-8 py-10 text-left"
+        className="flex w-full cursor-pointer items-center gap-3 sm:gap-6 px-4 py-6 sm:px-8 sm:py-10 text-left"
       >
         <span className="shrink-0 w-8 pt-0.5 text-sm font-medium tabular-nums text-foreground/30 select-none">{num}</span>
         <span className="flex-1 text-[17px] font-semibold text-foreground leading-snug">{q}</span>
@@ -348,7 +348,7 @@ function FaqItem({ num, q, a }: { num: string; q: string; a: string }) {
           open ? "max-h-48 opacity-100 mt-4" : "max-h-0 opacity-0"
         }`}
       >
-        <p className="px-8 pb-8 text-[15px] leading-relaxed text-muted-foreground">{a}</p>
+        <p className="px-4 pb-6 sm:px-8 sm:pb-8 text-[15px] leading-relaxed text-muted-foreground">{a}</p>
       </div>
     </div>
   );
@@ -992,7 +992,21 @@ export function ApiDocs() {
 
             <div>
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">Query parameters</h3>
-              <div className="overflow-x-auto rounded-2xl border border-border">
+              {/* Mobile */}
+              <div className="sm:hidden space-y-3">
+                {PARAMS.map((p) => (
+                  <div key={p.name} className="rounded-xl border border-border bg-card p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <code className="font-mono text-sm font-semibold text-foreground">{p.name}</code>
+                      <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">{p.type}</span>
+                      <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[11px] text-primary">{p.req}</span>
+                    </div>
+                    <p className="text-[13px] text-muted-foreground">{p.desc}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop */}
+              <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
                 <table className="w-full min-w-[520px] text-sm">
                   <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <tr>
@@ -1035,7 +1049,20 @@ export function ApiDocs() {
 
           <Section id="schema" eyebrow="04" title="Response Schema">
             <p>Jede Antwort enthält ein flaches JSON-Objekt mit allen kaffeerelevanten Wasserwerten — direkt verwendbar für Extraktionsberechnungen und Wasserrezepte.</p>
-            <div className="overflow-x-auto rounded-2xl border border-border">
+            {/* Mobile */}
+            <div className="sm:hidden space-y-2">
+              {SCHEMA.map((s) => (
+                <div key={s.f} className="rounded-xl border border-border bg-card p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <code className="font-mono text-[12px] font-semibold text-foreground">{s.f}</code>
+                    <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{s.t}</span>
+                  </div>
+                  <p className="text-[13px] text-muted-foreground">{s.d}</p>
+                </div>
+              ))}
+            </div>
+            {/* Desktop */}
+            <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
               <table className="w-full min-w-[520px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
@@ -1063,7 +1090,20 @@ export function ApiDocs() {
               <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">error</code> und{" "}
               <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">message</code>.
             </p>
-            <div className="overflow-x-auto rounded-2xl border border-border">
+            {/* Mobile */}
+            <div className="sm:hidden space-y-3">
+              {ERRORS.map((e) => (
+                <div key={e.name} className="rounded-xl border border-border bg-card p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-foreground">{e.code}</span>
+                    <code className="font-mono text-[12px] text-muted-foreground">{e.name}</code>
+                  </div>
+                  <p className="text-[13px] text-muted-foreground">{e.desc}</p>
+                </div>
+              ))}
+            </div>
+            {/* Desktop */}
+            <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
               <table className="w-full min-w-[420px] text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
@@ -1096,8 +1136,23 @@ X-RateLimit-Remaining: 847
 X-RateLimit-Reset: 2026-07-01T00:00:00.000Z
 X-Request-Id: 3f2a1b4c-...`}
             />
-            <div className="overflow-x-auto rounded-2xl border border-border">
-              <table className="w-full min-w-[420px] text-sm">
+            {/* Mobile */}
+            <div className="sm:hidden space-y-2">
+              {[
+                { plan: "Free", limit: "100 / Monat", price: "0 €" },
+                { plan: "Starter", limit: "1.000 / Monat", price: "9 €" },
+                { plan: "Pro", limit: "10.000 / Monat", price: "29 €" },
+              ].map((r) => (
+                <div key={r.plan} className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
+                  <span className="font-medium text-foreground">{r.plan}</span>
+                  <span className="font-mono text-[13px] text-muted-foreground">{r.limit}</span>
+                  <span className="text-[13px] text-muted-foreground">{r.price}</span>
+                </div>
+              ))}
+            </div>
+            {/* Desktop */}
+            <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border">
+              <table className="w-full text-sm">
                 <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
                   <tr>
                     <th className="px-4 py-3 font-medium">Plan</th>
@@ -1107,10 +1162,9 @@ X-Request-Id: 3f2a1b4c-...`}
                 </thead>
                 <tbody className="divide-y divide-border bg-card">
                   {[
-                    { plan: "Free", limit: "100", price: "kostenlos" },
-                    { plan: "Starter", limit: "1.000", price: "auf Anfrage" },
-                    { plan: "Pro", limit: "10.000", price: "auf Anfrage" },
-                    { plan: "Unlimited", limit: "∞", price: "auf Anfrage" },
+                    { plan: "Free", limit: "100", price: "0 €" },
+                    { plan: "Starter", limit: "1.000", price: "9 €" },
+                    { plan: "Pro", limit: "10.000", price: "29 €" },
                   ].map((r) => (
                     <tr key={r.plan}>
                       <td className="px-4 py-3 font-medium text-foreground">{r.plan}</td>
