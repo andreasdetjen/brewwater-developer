@@ -1204,15 +1204,10 @@ X-Request-Id: 3f2a1b4c-...`}
                   "radial-gradient(120% 80% at 50% 0%, oklch(0.62 0.28 264) 0%, oklch(0.4 0.3 264) 100%)",
               }}
             >
-              {/* Grid overlay */}
-              <div
-                className="pointer-events-none absolute inset-0 opacity-[0.12]"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-                  backgroundSize: "40px 40px",
-                }}
-              />
+              {/* Blob overlays */}
+              <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+              <div className="pointer-events-none absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.07] blur-2xl" />
 
               {/* Icon */}
               <div className="relative mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-lg">
