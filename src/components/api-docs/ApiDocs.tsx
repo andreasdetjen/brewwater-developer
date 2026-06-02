@@ -1042,6 +1042,11 @@ export function ApiDocs() {
 
           <Section id="authentication" eyebrow="02" title="Authentication">
             <CodeBlock code={`X-API-Key: bw_live_4f8a...c91d`} />
+            <ul className="space-y-2 text-[15px] text-muted-foreground">
+              <li>Keys beginnen immer mit <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-foreground">bw_live_</code> und werden einmalig ausgestellt</li>
+              <li>Kein OAuth, kein Bearer-Token — nur den Header setzen</li>
+              <li>Key verloren? Schreib uns: <a href="mailto:api@brewwater.de" className="text-primary hover:underline">api@brewwater.de</a></li>
+            </ul>
           </Section>
 
           <Section id="endpoints" eyebrow="03" title="Endpoints">
