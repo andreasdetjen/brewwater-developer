@@ -1167,7 +1167,7 @@ export function ApiDocs() {
               {ERRORS.map((e) => (
                 <div key={e.name} className="rounded-xl border border-border bg-card p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-foreground">{e.code}</span>
+                    <span className={errorBadgeClasses(e.code)}>{e.code}</span>
                     <code className="font-mono text-[12px] text-muted-foreground">{e.name}</code>
                   </div>
                   <p className="text-[13px] text-muted-foreground">{e.desc}</p>
@@ -1187,7 +1187,7 @@ export function ApiDocs() {
                 <tbody className="divide-y divide-border bg-card">
                   {ERRORS.map((e) => (
                     <tr key={e.code}>
-                      <td className="px-4 py-3 font-mono text-[13px] text-foreground">{e.code}</td>
+                      <td className="px-4 py-3"><span className={errorBadgeClasses(e.code)}>{e.code}</span></td>
                       <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{e.name}</td>
                       <td className="px-4 py-3 text-muted-foreground">{e.desc}</td>
                     </tr>
@@ -1204,44 +1204,31 @@ X-RateLimit-Remaining: 847
 X-RateLimit-Reset: 2026-07-01T00:00:00.000Z
 X-Request-Id: 3f2a1b4c-...`}
             />
-            {/* Mobile */}
-            <div className="sm:hidden space-y-2">
+            <div className="grid gap-3 sm:grid-cols-3">
               {[
-                { plan: "Free", limit: "100 / Monat", price: "0 €" },
-                { plan: "Starter", limit: "1.000 / Monat", price: "9 €" },
-                { plan: "Pro", limit: "10.000 / Monat", price: "29 €" },
+                { plan: "Free", limit: "100", price: "0 €", highlight: false },
+                { plan: "Starter", limit: "1.000", price: "9 € / Monat", highlight: false },
+                { plan: "Pro", limit: "10.000", price: "29 € / Monat", highlight: true },
               ].map((r) => (
-                <div key={r.plan} className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
-                  <span className="font-medium text-foreground">{r.plan}</span>
-                  <span className="font-mono text-[13px] text-muted-foreground">{r.limit}</span>
-                  <span className="text-[13px] text-muted-foreground">{r.price}</span>
+                <div
+                  key={r.plan}
+                  className={`rounded-2xl border bg-card p-5 ${r.highlight ? "border-primary/40 ring-1 ring-primary/20" : "border-border"}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-foreground">{r.plan}</span>
+                    {r.highlight && (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                        Beliebt
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-4 font-display text-4xl font-semibold leading-none tracking-tight text-foreground tabular-nums">
+                    {r.limit}
+                  </div>
+                  <p className="mt-1.5 text-[11px] uppercase tracking-wider text-muted-foreground">Anfragen / Monat</p>
+                  <p className="mt-4 text-[13px] text-muted-foreground">{r.price}</p>
                 </div>
               ))}
-            </div>
-            {/* Desktop */}
-            <div className="hidden sm:block overflow-x-auto no-scrollbar rounded-2xl border border-border">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-3 font-medium">Plan</th>
-                    <th className="px-4 py-3 font-medium">Anfragen/Monat</th>
-                    <th className="px-4 py-3 font-medium">Preis</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border bg-card">
-                  {[
-                    { plan: "Free", limit: "100", price: "0 €" },
-                    { plan: "Starter", limit: "1.000", price: "9 €" },
-                    { plan: "Pro", limit: "10.000", price: "29 €" },
-                  ].map((r) => (
-                    <tr key={r.plan}>
-                      <td className="px-4 py-3 font-medium text-foreground">{r.plan}</td>
-                      <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{r.limit}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{r.price}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           </Section>
 
