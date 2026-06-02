@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LoginModal } from "@/components/login/LoginModal";
 
 const NAV = [
   { id: "getting-started", label: "Getting Started" },
@@ -699,20 +698,6 @@ function LivePlayground() {
 }
 
 export function ApiDocs() {
-  const [loginOpen, setLoginOpen] = useState(false);
-  const loginRef = useRef<HTMLDivElement>(null);
-  const loginBtnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!loginOpen) return;
-    function onDown(e: MouseEvent) {
-      const t = e.target as Node;
-      if (loginRef.current?.contains(t) || loginBtnRef.current?.contains(t)) return;
-      setLoginOpen(false);
-    }
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, [loginOpen]);
 
 
   return (
@@ -744,26 +729,12 @@ export function ApiDocs() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
-
-            <div className="relative">
-              <Button
-                ref={loginBtnRef}
-                size="sm"
-                className="rounded-full px-4"
-                onClick={() => setLoginOpen((v) => !v)}
-              >
-                Log in
-              </Button>
-              {loginOpen && (
-                <div
-                  ref={loginRef}
-                  className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+8px)] z-50"
-                  style={{ animation: "none" }}
-                >
-                  <LoginModal />
-                </div>
-              )}
-            </div>
+            <a
+              href="mailto:api@brewwater.de?subject=API Key Anfrage"
+              className="hidden rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 sm:inline-block"
+            >
+              API Key anfordern
+            </a>
             <MobileNav />
           </div>
         </div>

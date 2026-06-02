@@ -6,7 +6,6 @@ import { ApiDocs } from "@/components/api-docs/ApiDocs";
 import { Changelog } from "@/components/changelog/Changelog";
 import { Impressum } from "@/components/impressum/Impressum";
 import { Datenschutz } from "@/components/datenschutz/Datenschutz";
-import { LoginModal } from "@/components/login/LoginModal";
 import "./styles.css";
 
 function Redirect({ to }: { to: string }) {
@@ -22,14 +21,6 @@ function App() {
         <Route path="/changelog" element={<Changelog />} />
         <Route path="/impressum" element={<Impressum />} />
         <Route path="/datenschutz" element={<Datenschutz />} />
-        <Route
-          path="/login"
-          element={
-            <div className="min-h-screen flex items-center justify-center p-6 bg-muted/40">
-              <LoginModal />
-            </div>
-          }
-        />
         <Route path="*" element={<ApiDocs />} />
       </Routes>
     </BrowserRouter>
